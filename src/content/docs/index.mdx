@@ -1,0 +1,73 @@
+---
+title: Token Listing Format
+description: The design token interchange format for developers.
+template: splash
+hero:
+  tagline: The design token interchange format for developers.
+  actions:
+    - text: Read the Spec
+      link: /spec/
+      icon: right-arrow
+      variant: primary
+    - text: View Examples
+      link: /examples/
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, Steps, Badge } from '@astrojs/starlight/components';
+
+## Why Token Listing?
+
+Design tokens are increasingly prevalent in code environments. Yet, the standardisation efforts of the W3C [Design Tokens Community Group (DTCG)](https://www.designtokens.org/) have focused on the authoring side of things, leaving gaps in interoperability for tools that consume built design tokens in code.
+
+Every tool that handles design tokens in built environments needs its own input format and configuration API. Documentation sites, search engines, differs, changelog generators, linters and MCP servers all need to extend the capabilities of DTCG to understand built design tokens.
+
+Token Listing acts as a shared interchange layer: produced once by compatible design token translators, handling any team's conventions and design token taxonomy, and consumed seamlessly by any compliant tool.
+
+<CardGrid>
+  <Card title="Interoperable" icon="puzzle">
+    Any compliant translator's output is consumable by any compliant consumer. Switch tools without rewriting your token data pipelines.
+  </Card>
+  <Card title="Feature Rich" icon="setting">
+    Token Listings makes it trivial to read per-platform names and values for design tokens. It helps tools navigate alias chains and mode resolution, preview tokens without custom parsers, and extends the list of token types supported by DTCG.
+  </Card>
+  <Card title="Complements DTCG" icon="document">
+  DTCG describes source design tokens as they are authored. Token Listing extends design token data via DTCG extensions, making it easy to support in DTCG compliant tools.
+  </Card>
+</CardGrid>
+
+## Who is it for?
+
+<CardGrid>
+  <Card title="MCP servers" icon="laptop">
+    Expose structured token data to AI assistants and agent-based tooling.
+  </Card>
+  <Card title="Code generation tools" icon="right-arrow">
+    Translate token names accurately during code generation or translation.
+  </Card>
+  <Card title="Documentation sites" icon="open-book">
+    Render token previews, names, and descriptions regardless of how complex your tokens are.
+  </Card>
+  <Card title="Diff &amp; changelog generators" icon="magnifier">
+    Track which tokens changed, were added, removed or deprecated between releases.
+  </Card>
+  <Card title="Search indexes" icon="magnifier">
+    Power "find this token" features in IDEs and design tool plugins.
+  </Card>
+  <Card title="Linting tools" icon="warning">
+    Enforce token pairing policies based on their subtypes, prevent deprecated token usage, etc.
+  </Card>
+</CardGrid>
+
+## How to consume it
+
+<Steps>
+1. Validate `meta.version` is an integer your tool knows how to handle.
+2. Iterate `data` for token entries, consuming the DTCG fields and `$extensions.listing` fields your tool cares about.
+3. Use `meta.modes`, `meta.platforms`, `meta.groups`, and `meta.sourceOfTruth` for top-level context.
+</Steps>
+
+---
+
+The format was developed by Steve Dodier-Lazaro, software engineer at [Storybook](https://storybook.js.org/). It has reference implementations in [`@terrazzo/plugin-token-listing`](https://terrazzo.app/docs/integrations/token-listing) and [Style Dictionary](TODO). 

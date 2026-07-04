@@ -1,0 +1,118 @@
+/* ===== Token Listing — acid lime × electric violet theme ===== */
+
+/* Light mode */
+:root,
+[data-theme='light'] {
+  --sl-color-accent-low: #eaffc0;
+  --sl-color-accent: #5a3fcf;
+  --sl-color-accent-high: #2d5a00;
+
+  --sl-color-gray-1: #1a0d40;
+  --sl-color-gray-2: #312070;
+  --sl-color-gray-3: #6b50d8;
+  --sl-color-gray-4: #9580eb;
+  --sl-color-gray-5: #c4b8f5;
+  --sl-color-gray-6: #e4deff;
+  --sl-color-gray-7: #f2f0ff;
+
+  --sl-color-white: #ffffff;
+  --sl-color-black: #05001a;
+
+  --sl-color-bg-inline-code: #eaffc0;
+}
+
+/* Dark mode */
+[data-theme='dark'] {
+  --sl-color-accent-low: #160840;
+  --sl-color-accent: #7b61ff;
+  --sl-color-accent-high: #a3df00;
+
+  --sl-color-gray-1: #f0eeff;
+  --sl-color-gray-2: #d4cdf5;
+  --sl-color-gray-3: #a89adf;
+  --sl-color-gray-4: #7b61ff;
+  --sl-color-gray-5: #3d2e7a;
+  --sl-color-gray-6: #1f1050;
+  --sl-color-gray-7: #0a0020;
+
+  --sl-color-white: #f0eeff;
+  --sl-color-black: #05001a;
+
+  --sl-color-bg: #05001a;
+  --sl-color-bg-nav: #0a0020;
+  --sl-color-bg-sidebar: #0a0020;
+  --sl-color-bg-inline-code: #160840;
+  --sl-color-hairline: #2a1e60;
+  --sl-color-hairline-shade: #1f1050;
+  --sl-color-hairline-light: #2a1e60;
+}
+
+/* Code block backgrounds (Expressive Code) */
+[data-theme='dark'] {
+  --ec-frm-edBg: #0a0020;
+  --ec-frm-edBrdCol: #2a1e60;
+  --ec-ttb-bg: #0a0020;
+  --ec-ttb-bdBtmCol: #2a1e60;
+}
+
+/* Splash page hero — make tagline pop */
+.hero > .sl-flex {
+  gap: 2rem;
+}
+
+.hero .tagline {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: var(--sl-color-gray-2);
+  max-width: 42rem;
+}
+
+/* Page titles use the acid lime accent */
+.content-panel h1 {
+  color: var(--sl-color-accent-high);
+}
+
+/* Sidebar active item — lime highlight on dark, lime on light */
+[data-theme='dark'] a[aria-current='page'] {
+  color: var(--sl-color-accent-high) !important;
+  background-color: var(--sl-color-accent-low) !important;
+}
+
+/* Inline code — give it a little more breathing room */
+:not(pre) > code {
+  padding: 0.15em 0.4em;
+  border-radius: 0.3em;
+  font-size: 0.875em;
+}
+
+/* Table styling */
+table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+thead tr {
+  background-color: var(--sl-color-accent-low);
+}
+
+[data-theme='dark'] thead tr {
+  background-color: var(--sl-color-accent-low);
+}
+
+/* Bump the heading weight for authority */
+h2, h3 {
+  font-weight: 700;
+}
+
+/* Hero action buttons */
+.action.primary {
+  background: var(--sl-color-accent) !important;
+  border-color: var(--sl-color-accent) !important;
+  color: #fff !important;
+}
+
+[data-theme='dark'] .action.primary {
+  background: var(--sl-color-accent) !important;
+  border-color: var(--sl-color-accent) !important;
+  color: #fff !important;
+}

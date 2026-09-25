@@ -1,0 +1,298 @@
+---
+title: Build your first Token Listing
+description: A hands-on walkthrough that turns a small set of DTCG tokens into a Token Listing file with Terrazzo, then adds a light and dark theme.
+---
+
+import { Steps, FileTree } from '@astrojs/starlight/components';
+
+In this tutorial you will start from an empty folder and end with a `tokens.listing.json` file that describes three design tokens, their CSS variable names, their preview values, and where each one was authored. Then you will add a light and dark theme and watch the listing grow to describe both.
+
+You need Node.js 20 or later and about fifteen minutes. No prior experience with Terrazzo or the DTCG format is required, but it helps to know what a design token is.
+
+:::caution[Plugin status]
+This tutorial shows the Token Listing v1 output. At the time of writing, the published `@terrazzo/plugin-token-listing` (0.1.x) still writes the earlier proof-of-concept shape: the extension key is `app.terrazzo.listing`, platform names live under `names`, aliases appear as `originalValue`, and resolver modes are not yet enumerated. The commands are the same; only the output differs until the v1 release of the plugin.
+:::
+
+## What you will build
+
+<FileTree>
+- my-tokens/
+  - tokens/
+    - base.tokens.json
+    - theme/
+      - light.tokens.json
+      - dark.tokens.json
+    - tokens.resolver.json
+  - terrazzo.config.ts
+  - package.json
+  - dist/
+    - tokens.css
+    - tokens.listing.json
+</FileTree>
+
+## Part 1: a listing with no modes
+
+<Steps>
+
+1. Create a project and install Terrazzo with the CSS and Token Listing plugins.
+
+   ```sh
+   mkdir my-tokens && cd my-tokens
+   npm init -y
+   npm install -D @terrazzo/cli @terrazzo/plugin-css @terrazzo/plugin-token-listing
+   ```
+
+2. Write three tokens in the DTCG format. Two are colors, one is a dimension. The text color is an alias of the brand color.
+
+   ```json title="tokens/base.tokens.json"
+   {
+     "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+     "color": {
+       "$type": "color",
+       "$description": "All color tokens.",
+       "brand": {
+         "$description": "The brand palette.",
+         "500": {
+           "$value": { "colorSpace": "srgb", "components": [0.36, 0.25, 0.81], "hex": "#5c40cf" }
+         }
+       },
+       "text": {
+         "primary": {
+           "$description": "Default text color.",
+           "$value": "{color.brand.500}"
+         }
+       }
+     },
+     "space": {
+       "$type": "dimension",
+       "md": { "$value": { "value": 16, "unit": "px" } }
+     }
+   }
+   ```
+
+   Notice that only the groups declare a `$type`. The tokens inherit it, which is standard DTCG behaviour.
+
+3. Configure Terrazzo. The CSS plugin builds the tokens; the listing plugin records what the CSS plugin did.
+
+   ```ts title="terrazzo.config.ts"
+   import { defineConfig } from "@terrazzo/cli";
+   import css from "@terrazzo/plugin-css";
+   import listing from "@terrazzo/plugin-token-listing";
+
+   export default defineConfig({
+     tokens: ["./tokens/base.tokens.json"],
+     outDir: "./dist/",
+     plugins: [
+       css({ filename: "tokens.css" }),
+       listing({
+         filename: "tokens.listing.json",
+         platforms: {
+           css: { name: "@terrazzo/plugin-css", description: "CSS custom properties" },
+         },
+       }),
+     ],
+   });
+   ```
+
+   The `platforms.css` entry tells the listing plugin to ask the CSS plugin for each token's variable name.
+
+4. Build.
+
+   ```sh
+   npx tz build
+   ```
+
+   You should see `✔ 3 tokens built` and two files in `dist/`.
+
+5. Open `dist/tokens.css` first. This is the artefact your application ships:
+
+   ```css title="dist/tokens.css"
+   :root {
+     --color-brand-500: rgb(36% 25% 81%);
+     /* Default text color. */
+     --color-text-primary: var(--color-brand-500);
+     --space-md: 16px;
+   }
+   ```
+
+6. Now open `dist/tokens.listing.json`. This is the artefact your tools read. Here is the entry for the aliased text color:
+
+   ```json title="dist/tokens.listing.json (excerpt)"
+   {
+     "$name": "color.text.primary",
+     "$type": "color",
+     "$description": "Default text color.",
+     "$value": { "colorSpace": "srgb", "components": [0.36, 0.25, 0.81], "hex": "#5c40cf", "alpha": 1 },
+     "$extensions": {
+       "listing": {
+         "platforms": {
+           "css": { "name": "--color-text-primary", "value": "var(--color-brand-500)" }
+         },
+         "aliasChain": ["color.brand.500"],
+         "previewValue": "#5c40cf",
+         "source": {
+           "$ref": "tokens/base.tokens.json#/color/text/primary",
+           "loc": {
+             "start": { "line": 13, "column": 18, "offset": 366 },
+             "end": { "line": 16, "column": 8, "offset": 460 }
+           }
+         }
+       }
+     }
+   }
+   ```
+
+   Compare it with what you wrote in step 2:
+
+   - `$name` is the dotted path of the token. `$type` was inherited from the group and is now explicit.
+   - `$value` is resolved. The alias `{color.brand.500}` is gone, but `aliasChain` remembers it.
+   - `platforms.css.name` is the exact CSS variable the CSS plugin emitted. A documentation site can print it without knowing Terrazzo's naming rules.
+   - `previewValue` is a plain CSS color, ready to drop into a swatch.
+   - `source.$ref` points back at the token's location in your source file, down to the line.
+
+   The listing also has a `meta` object at the top. For now it only records the format version, the tool that produced it, and the one platform you configured.
+
+</Steps>
+
+## Part 2: add a light and dark theme
+
+Real token systems vary by theme, device, or brand. The DTCG resolver format describes those variations, and the listing enumerates the result. You will add a `theme` modifier with `light` and `dark` contexts.
+
+<Steps>
+
+1. Create two theme files. Each only contains the tokens that change.
+
+   ```json title="tokens/theme/light.tokens.json"
+   {
+     "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+     "color": {
+       "$type": "color",
+       "bg": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "hex": "#ffffff" } },
+       "text": { "primary": { "$value": "{color.brand.500}" } }
+     }
+   }
+   ```
+
+   ```json title="tokens/theme/dark.tokens.json"
+   {
+     "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+     "color": {
+       "$type": "color",
+       "bg": { "$value": { "colorSpace": "srgb", "components": [0.02, 0, 0.1], "hex": "#05001a" } },
+       "text": { "primary": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "hex": "#ffffff" } } }
+     }
+   }
+   ```
+
+2. Write a resolver that combines the base set with the theme modifier.
+
+   ```json title="tokens/tokens.resolver.json"
+   {
+     "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+     "name": "Tutorial tokens",
+     "version": "2025.10",
+     "sets": {
+       "base": { "sources": [{ "$ref": "base.tokens.json" }] }
+     },
+     "modifiers": {
+       "theme": {
+         "description": "Color theme",
+         "contexts": {
+           "light": [{ "$ref": "theme/light.tokens.json" }],
+           "dark": [{ "$ref": "theme/dark.tokens.json" }]
+         },
+         "default": "light"
+       }
+     },
+     "resolutionOrder": [{ "$ref": "#/sets/base" }, { "$ref": "#/modifiers/theme" }]
+   }
+   ```
+
+3. Point Terrazzo at the resolver instead of the token file, tell the CSS plugin how to emit each theme, and declare the mode in the listing.
+
+   ```ts title="terrazzo.config.ts" ins={6,11-14,19}
+   import { defineConfig } from "@terrazzo/cli";
+   import css from "@terrazzo/plugin-css";
+   import listing from "@terrazzo/plugin-token-listing";
+
+   export default defineConfig({
+     tokens: ["./tokens/tokens.resolver.json"],
+     outDir: "./dist/",
+     plugins: [
+       css({
+         filename: "tokens.css",
+         permutations: [
+           { input: { theme: "light" }, prepare: (c) => `:root {\n${c}\n}` },
+           { input: { theme: "dark" }, prepare: (c) => `[data-theme="dark"] {\n${c}\n}` },
+         ],
+       }),
+       listing({
+         filename: "tokens.listing.json",
+         platforms: { css: { name: "@terrazzo/plugin-css", description: "CSS custom properties" } },
+         modes: [{ name: "theme", values: ["light", "dark"], default: "light", description: "Color theme" }],
+       }),
+     ],
+   });
+   ```
+
+4. Build again.
+
+   ```sh
+   npx tz build
+   ```
+
+5. Look at `meta.modes` at the top of the listing. It now catalogues the theme so a tool can offer a switcher:
+
+   ```json title="dist/tokens.listing.json (excerpt)"
+   "meta": {
+     "version": 1,
+     "authoringTool": "Terrazzo",
+     "modes": [
+       { "name": "theme", "values": ["light", "dark"], "default": "light", "description": "Color theme" }
+     ],
+     "platforms": { "css": { "description": "CSS custom properties" } }
+   }
+   ```
+
+6. Find `color.text.primary` in `data`. There are now two entries with that name, one per theme. The dark one looks like this:
+
+   ```json title="dist/tokens.listing.json (excerpt)"
+   {
+     "$name": "color.text.primary",
+     "$type": "color",
+     "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "hex": "#ffffff", "alpha": 1 },
+     "$extensions": {
+       "listing": {
+         "platforms": { "css": { "name": "--color-text-primary", "value": "rgb(100% 100% 100%)" } },
+         "mode": "dark",
+         "previewValue": "#ffffff",
+         "source": {
+           "$ref": "theme/dark.tokens.json#/color/text/primary",
+           "via": "#/modifiers/theme/contexts/dark"
+         }
+       }
+     }
+   }
+   ```
+
+   Three things changed compared to Part 1:
+
+   - `mode` says which context this entry belongs to. The light entry says `"light"`.
+   - The dark entry has no `aliasChain`, because in dark mode the token is a plain value rather than an alias.
+   - `source.via` records that the resolver's `dark` context introduced this value, and `$ref` is now relative to the resolver document.
+
+   `space.md` still appears only once. It does not vary by theme, so there is nothing to enumerate.
+
+</Steps>
+
+## What you learned
+
+- A Token Listing is a build artefact that sits next to your CSS output and describes it.
+- Every entry keeps the DTCG fields you authored and adds a `listing` extension with platform names, preview values, alias chains, and source locations.
+- Modes come from the resolver. A token that varies across contexts appears once per context.
+
+## Where next
+
+- [Read a Token Listing in your own tool](/tutorials/read-a-listing/) writes a small script that turns this file into an HTML swatch page.
+- [Generate a Token Listing with Terrazzo](/how-to/terrazzo/) covers platforms without a Terrazzo plugin, custom filters, subtypes, and source of truth.
+- [Why Token Listing exists](/explanation/why-token-listing/) explains the problem the format solves.

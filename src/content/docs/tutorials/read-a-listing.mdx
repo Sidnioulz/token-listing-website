@@ -1,0 +1,126 @@
+---
+title: Read a Token Listing in your own tool
+description: Write a short Node.js script that turns a Token Listing into an HTML page of color swatches, and learn the reading pattern every consumer follows.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+In this tutorial you will write a script of about forty lines that reads a Token Listing and renders every color token as a swatch with its CSS variable, its mode, its alias chain and its deprecation status. By the end you will know the three-step pattern every Token Listing consumer follows, whether it is a documentation site, a linter or an MCP server.
+
+You need Node.js 20 or later. You do not need Terrazzo or any other token tool: you will use an example listing from this site.
+
+<Steps>
+
+1. Create a folder and save the [full-featured example listing](/examples/#full-featured) into it as `tokens.listing.json`. It has four entries: a brand color, a semantic text color in light and dark modes, and a deprecated legacy color.
+
+   ```sh
+   mkdir listing-reader && cd listing-reader
+   ```
+
+2. Create `render.mjs` and start by loading the file and checking its version. A consumer must refuse versions it does not know, because a version bump means a breaking change.
+
+   ```js title="render.mjs"
+   import { readFile, writeFile } from "node:fs/promises";
+
+   const listing = JSON.parse(await readFile("tokens.listing.json", "utf8"));
+
+   if (listing.meta.version !== 1) {
+     throw new Error(`Unsupported Token Listing version: ${listing.meta.version}`);
+   }
+   ```
+
+3. Read the top-level context from `meta`. You only need to know whether the listing has modes, so the table can show a mode column.
+
+   ```js title="render.mjs"
+   const hasModes = (listing.meta.modes ?? []).length > 0;
+   ```
+
+   `meta.modes` is also where you would build a mode switcher: each entry has a `name`, its `values` and an optional `default`.
+
+4. Iterate `data` and pick what you need from each entry. The DTCG fields sit at the top level; everything Token Listing adds sits under `$extensions.listing`.
+
+   ```js title="render.mjs"
+   const rows = listing.data
+     .filter((t) => t.$type === "color")
+     .map((t) => {
+       const l = t.$extensions.listing;
+       const css = l.platforms.css;
+       const deprecated = t.$deprecated ?? css?.deprecated;
+       return `
+         <tr>
+           <td><span class="swatch" style="background:${l.previewValue ?? "transparent"}"></span></td>
+           <td><code>${t.$name}</code>${deprecated ? ` <mark>deprecated</mark>` : ""}</td>
+           <td>${hasModes ? (l.mode ?? "") : ""}</td>
+           <td>${css ? `<code>${css.name}</code>` : "<em>not in CSS</em>"}</td>
+           <td>${l.aliasChain ? l.aliasChain.map((id) => `<code>${id}</code>`).join(" → ") : ""}</td>
+           <td>${t.$description ?? ""}</td>
+         </tr>`;
+     })
+     .join("");
+   ```
+
+   Look at how little the script has to know:
+
+   - `previewValue` is already valid CSS, so the swatch is one inline style.
+   - `platforms.css` is present only when the token exists in CSS. Its `name` is the variable to print. A missing entry is information too: the token is not built for that platform.
+   - `mode` is absent on entries that do not vary, so the same code handles listings with and without modes.
+   - `aliasChain` is an ordered list of token ids, so rendering the chain is a `join`.
+
+5. Write the page.
+
+   ```js title="render.mjs"
+   const html = `<!doctype html>
+   <meta charset="utf-8">
+   <title>Colors</title>
+   <style>
+     body { font: 14px/1.5 system-ui, sans-serif; padding: 2rem; }
+     table { border-collapse: collapse; }
+     td, th { border-bottom: 1px solid #ddd; padding: .4rem .8rem; text-align: left; }
+     .swatch { display: inline-block; width: 2rem; height: 2rem; border-radius: .3rem; border: 1px solid #0003; }
+   </style>
+   <h1>Colors from ${listing.meta.authoringTool}</h1>
+   <table>
+     <thead><tr><th></th><th>Token</th><th>Mode</th><th>CSS</th><th>Aliases</th><th>Description</th></tr></thead>
+     <tbody>${rows}</tbody>
+   </table>`;
+
+   await writeFile("colors.html", html);
+   console.log(`Wrote colors.html with ${listing.data.length} entries`);
+   ```
+
+6. Run it and open the result in a browser.
+
+   ```sh
+   node render.mjs
+   ```
+
+   You should see four rows:
+
+   | | Token | Mode | CSS | Aliases |
+   |---|---|---|---|---|
+   | red swatch | `color.brand.500` | | `--color-brand-500` | |
+   | red swatch | `color.semantic.fg` | light | `--color-semantic-fg` | `color.brand.500` |
+   | white swatch | `color.semantic.fg` | dark | `--color-semantic-fg` | `color.white` |
+   | red swatch | `color.legacy.danger` deprecated | | `--color-legacy-danger` | |
+
+   The semantic text color appears twice because it has two modes. Nothing in the script special-cased that: a listing entry is always one token in one mode, and the script rendered one row per entry.
+
+7. Try a change. Edit `tokens.listing.json` and set `meta.version` to `2`, then run the script again. It should refuse the file. Put it back to `1` afterwards.
+
+</Steps>
+
+## The pattern you just used
+
+Every consumer of a Token Listing does the same three things:
+
+1. Check `meta.version` and stop if it is unknown.
+2. Read `meta` for context: modes, platforms, group descriptions, source of truth.
+3. Iterate `data`, taking the DTCG fields from the top level and the tool-oriented fields from `$extensions.listing`, ignoring any field it does not recognise.
+
+The third rule matters for forward compatibility. Producers may add fields, and vendors may add namespaced ones; a consumer that only reads what it needs keeps working.
+
+## Where next
+
+- The [specification](/spec/) lists every field with its type and semantics.
+- [Modes, platforms and provenance](/explanation/modes-platforms-and-provenance/) explains the ideas behind `mode`, `platforms` and `source`.
+- Turn the script into something real: group entries by `$name` to show all modes of a token in one row, or read `meta.groups` to add section headings.

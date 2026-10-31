@@ -62,6 +62,12 @@
   --sl-color-hairline-light: var(--tl-surface-auxiliary-border);
 }
 
+/* Docs pages: the grid shows only behind the table-of-contents column.
+   The content pane is opaque; splash pages (data-has-hero) keep the grid everywhere. */
+html:not([data-has-hero]) .main-pane {
+  background: var(--sl-color-bg);
+}
+
 /* Prose links: violet, underlined, lime on hover (action-auxiliary) */
 .sl-markdown-content a:not(.tl-button):not(:where(.not-content *)) {
   color: var(--sl-color-text-accent);

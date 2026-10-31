@@ -5,17 +5,17 @@ template: splash
 hero:
   tagline: The design token interchange format for developers.
   actions:
-    - text: Read the Spec
-      link: /spec/
+    - text: Get started
+      link: /tutorials/first-listing/
       icon: right-arrow
       variant: primary
-    - text: View Examples
-      link: /examples/
-      icon: external
+    - text: Read the spec
+      link: /spec/
+      icon: document
       variant: minimal
 ---
 
-import { Card, CardGrid, Steps, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Why Token Listing?
 
@@ -60,13 +60,22 @@ Token Listing acts as a shared interchange layer: produced once by compatible de
   </Card>
 </CardGrid>
 
-## How to consume it
+## Where to start
 
-<Steps>
-1. Validate `meta.version` is an integer your tool knows how to handle.
-2. Iterate `data` for token entries, consuming the DTCG fields and `$extensions.listing` fields your tool cares about.
-3. Use `meta.modes`, `meta.platforms`, `meta.groups`, and `meta.sourceOfTruth` for top-level context.
-</Steps>
+<CardGrid>
+  <Card title="Tutorials" icon="rocket">
+    Learn by doing. [Build your first Token Listing](/tutorials/first-listing/) with Terrazzo, then [read one in your own tool](/tutorials/read-a-listing/) in forty lines of JavaScript.
+  </Card>
+  <Card title="How-to guides" icon="list-format">
+    Get a job done: [show tokens in Storybook with Swatchbook](/how-to/storybook-swatchbook/), [generate a listing with Terrazzo](/how-to/terrazzo/), or check the status of [Style Dictionary support](/how-to/style-dictionary/).
+  </Card>
+  <Card title="Understanding" icon="information">
+    Read [why the format exists](/explanation/why-token-listing/), [how it relates to DTCG](/explanation/token-listing-and-dtcg/), and [the decisions behind its shape](/explanation/design-decisions/).
+  </Card>
+  <Card title="Reference" icon="document">
+    The normative [specification](/spec/), annotated [examples](/examples/), the [glossary](/glossary/) and the [JSON Schema](/schema.json).
+  </Card>
+</CardGrid>
 
 ---
 

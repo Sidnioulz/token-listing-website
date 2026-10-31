@@ -3,7 +3,7 @@ title: Specification
 description: Normative field-by-field reference for Token Listing Format v1.
 ---
 
-This page is the normative field-by-field reference for the Token Listing Format, version 1. Consumers and producers MUST follow this spec to be considered compliant.
+This page is the normative field-by-field reference for the Token Listing Format, version 1. Consumers and producers MUST follow this spec to be considered compliant. A [JSON Schema](/schema.json) for version 1 is published alongside it; the schema is a validation aid and this text remains normative.
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 

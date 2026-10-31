@@ -9,6 +9,7 @@
 interface Props {
   cell?: string;
   lineAlpha?: number;
+  spotLineAlpha?: number;
   spotRadius?: string;
   spotSoftness?: string;
   spotIntensity?: number;
@@ -25,6 +26,7 @@ const p = Astro.props;
 const style = [
   p.cell && `--tl-grid-cell:${p.cell}`,
   p.lineAlpha != null && `--tl-grid-line-alpha:${p.lineAlpha}`,
+  p.spotLineAlpha != null && `--tl-grid-spot-line-alpha:${p.spotLineAlpha}`,
   p.spotRadius && `--tl-spot-radius:${p.spotRadius}`,
   p.spotSoftness && `--tl-spot-softness:${p.spotSoftness}`,
   p.spotIntensity != null && `--tl-spot-intensity:${p.spotIntensity}`,
@@ -55,15 +57,15 @@ const style = [
       linear-gradient(to right, var(--_line) var(--tl-rule), transparent var(--tl-rule)),
       linear-gradient(to bottom, var(--_line) var(--tl-rule), transparent var(--tl-rule));
     background-size: var(--_cell) var(--_cell);
-    /* anchored to the bottom edge so a growing cell pushes the lines upward */
-    background-position: 0 100%;
+    /* anchored bottom-centre so a growing cell pushes lines upward and outward from the middle */
+    background-position: 50% 100%;
   }
   .rest { --_c: var(--tl-grid-color-rest); }
   .spot {
     --_c: var(--tl-grid-color-spot);
     /* the lime grid sits half a cell above the violet one, so its lines fall between the static lines */
-    background-position: 0 calc(100% - var(--_cell) / 2);
-    --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 180%), transparent);
+    background-position: 50% calc(100% - var(--_cell) / 2);
+    --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-spot-line-alpha) * 100%), transparent);
     --tl-spot-x: 50%;
     --tl-spot-y: 30%;
     opacity: var(--tl-spot-intensity);

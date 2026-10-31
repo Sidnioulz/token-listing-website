@@ -49,7 +49,8 @@
 
   /* Grid (static) + spotlight (follows the cursor) */
   --tl-grid-cell: 40px;
-  --tl-grid-line-alpha: 0.11;
+  --tl-grid-line-alpha: 0.055; /* violet rest grid */
+  --tl-grid-spot-line-alpha: 0.2; /* lime spotlight grid, before --tl-spot-intensity */
   --tl-grid-color-rest: #6d4df5; /* saturated violet; the alpha keeps it quiet, the hue keeps it from going grey */
   --tl-grid-scroll-rate: 0.333; /* cell size grows by this fraction per viewport height scrolled (+33% per screen); 0 disables */
   --tl-grid-color-spot: var(--tl-action-primary-background);

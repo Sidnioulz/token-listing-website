@@ -17,20 +17,22 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Why Token Listing?
+## What is Token Listing?
 
-Design tokens are increasingly prevalent in code environments. Yet, the standardisation efforts of the W3C [Design Tokens Community Group (DTCG)](https://www.designtokens.org/) have focused on the authoring side of things, leaving gaps in interoperability for tools that consume built design tokens in code.
+In the age of agents, design tokens are increasingly necessary to ensure consistency and maintainability in code environments. The W3C [Design Tokens Community Group (DTCG)](https://www.designtokens.org/) has built a standard that supports design and token authoring tools, but it does not fully address the needs of tools that consume built design tokens in code.
 
-Every tool that handles design tokens in built environments needs its own input format and configuration API. Documentation sites, search engines, differs, changelog generators, linters and MCP servers all need to extend the capabilities of DTCG to understand built design tokens.
+In code environments, design tokens are rarely represented in the DTCG format. Every styling system, framework or platform has its own conventions for naming and structuring tokens. Organisations often handroll token translation logic to meet their own team conventions and requirements.
 
-Token Listing acts as a shared interchange layer: produced once by compatible design token translators, handling any team's conventions and design token taxonomy, and consumed seamlessly by any compliant tool.
+Because of that, building interoperable tools for design tokens in code seems impossible. Documentation sites, search engines, diff algorithms, changelog generators, linters, skills, MCP servers, design audit tools all could benefit from a standardized representation of design tokens in code environments.
+
+The Token Listing format fills that gap: it's produced by token translation tools like Style Dictionary and Terrazzo, and maps DTCG tokens to their exact representations in code. It provides a predictable, machine-readable structure for tools to manipulate tokens in code environments regardless of how they're actually implemented.
 
 <CardGrid>
   <Card title="Interoperable" icon="puzzle">
     Any compliant translator's output is consumable by any compliant consumer. Switch tools without rewriting your token data pipelines.
   </Card>
   <Card title="Feature Rich" icon="setting">
-    Token Listings makes it trivial to read per-platform names and values for design tokens. It helps tools navigate alias chains and mode resolution, preview tokens without custom parsers, and extends the list of token types supported by DTCG.
+    Token Listing makes it trivial to read per-platform names and values for design tokens. It helps tools navigate alias chains and mode resolution, preview tokens without custom parsers, and extends the list of token types supported by DTCG.
   </Card>
   <Card title="Complements DTCG" icon="document">
   DTCG describes source design tokens as they are authored. Token Listing extends design token data via DTCG extensions, making it easy to support in DTCG compliant tools.

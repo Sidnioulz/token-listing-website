@@ -1,0 +1,16 @@
+import { Meta, Markdown, Canvas } from '@storybook/addon-docs/blocks';
+import Guidelines from '../../DESIGN.md?raw';
+import * as ButtonStories from '../components/Button.stories';
+import * as CardStories from '../components/Card.stories';
+import * as ChipStories from '../components/IconChip.stories';
+
+<Meta title="Brand/Design guidelines" />
+
+<Markdown>{Guidelines}</Markdown>
+
+## Live
+
+<Canvas of={ButtonStories.Primary} />
+<Canvas of={ButtonStories.Secondary} />
+<Canvas of={CardStories.WithLinksInBody} />
+<Canvas of={ChipStories.AdjustedExtra} />

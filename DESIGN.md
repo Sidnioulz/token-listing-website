@@ -132,7 +132,7 @@ Under reduced motion the spotlight parks at its idle position (top centre), does
 | Component | Shape | Rest | Hover and focus |
 |---|---|---|---|
 | **Button primary** | four chamfers, filled | lime fill, dark mono label | fill lightens 12%, rises 1px, lime focus ring |
-| **Button secondary** | four chamfers, outlined | violet 1px border, muted violet label | border and label go lime |
+| **Button secondary** | four chamfers, outlined | page-coloured fill, violet 1px border, muted violet label | border and label go lime |
 | **Button auxiliary** | none | muted violet text | text goes lime |
 | **Card** | one chamfer top right | `surface-secondary` fill, 1px violet border | border and chip border go lime |
 | **IconChip** | square | lime glyph on `surface-auxiliary` | follows its card |

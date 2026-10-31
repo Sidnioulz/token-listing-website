@@ -11,7 +11,7 @@
   --tl-action-primary-background: #a3df00;
   --tl-action-primary-foreground: #05001a;
   --tl-action-primary-border: #a3df00;
-  --tl-action-secondary-background: transparent;
+  --tl-action-secondary-background: var(--tl-surface-primary-background); /* opaque so the grid does not show through the outline */
   --tl-action-secondary-foreground: #a89adf;
   --tl-action-secondary-border: #7b61ff;
   --tl-action-auxiliary-background: transparent;

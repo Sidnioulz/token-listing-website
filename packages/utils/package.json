@@ -1,0 +1,30 @@
+{
+  "name": "@token-listing/utils",
+  "version": "0.1.0",
+  "description": "Tool-agnostic utilities for working with Token Listing Format v1 documents",
+  "keywords": [
+    "design tokens",
+    "dtcg",
+    "token listing",
+    "design systems"
+  ],
+  "homepage": "https://token-listing.org",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "types",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  }
+}

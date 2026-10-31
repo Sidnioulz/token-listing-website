@@ -115,7 +115,7 @@ Parameters (all in `intents.css`, all overridable per instance of `GridBackgroun
 | `--tl-spot-follow` | 0.3 | lerp factor per frame. 1 is instant. |
 | `--tl-spot-breathe-period` | 8s | breathe cycle. 0 disables. |
 | `--tl-spot-breathe-amount` | 0.35 | fraction of intensity that breathes away |
-| `--tl-grid-scroll-rate` | 1 | cell growth per viewport height scrolled (1 = +100%), no upper limit. Both layers are anchored to the bottom edge, so growth pushes lines upward. 0 disables. |
+| `--tl-grid-scroll-rate` | 0.333 | cell growth per viewport height scrolled (0.333 = +33%), no upper limit. Both layers are anchored to the bottom edge, so growth pushes lines upward. 0 disables. |
 
 Under reduced motion the spotlight parks at its idle position (top centre), does not breathe, and the cell size does not change on scroll.
 

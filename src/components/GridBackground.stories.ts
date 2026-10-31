@@ -14,13 +14,15 @@ export default {
     spotFollow: { control: { type: 'range', min: 0.01, max: 1, step: 0.01 } },
     breathePeriod: { control: 'text' },
     breatheAmount: { control: { type: 'range', min: 0, max: 1, step: 0.05 } },
+    scrollRate: { control: { type: 'range', min: 0, max: 4, step: 0.25 } },
   },
-  args: { position: 'absolute', cell: '40px', lineAlpha: 0.11, spotRadius: '110vmax', spotSoftness: '0%', spotIntensity: 0.35, spotBloom: 0.05, spotFollow: 0.3, breathePeriod: '8s', breatheAmount: 0.35 },
+  args: { position: 'absolute', cell: '40px', lineAlpha: 0.11, spotRadius: '110vmax', spotSoftness: '0%', spotIntensity: 0.35, spotBloom: 0.05, spotFollow: 0.3, breathePeriod: '8s', breatheAmount: 0.35, scrollRate: 1 },
   decorators: [
-    (story: () => unknown) => `<div style="position:relative;min-height:100vh;background:var(--tl-surface-primary-background)">${story()}<p style="position:relative;padding:3rem;color:var(--tl-text-auxiliary-foreground);font-family:var(--tl-font-mono)">Move the pointer. The lime tint follows it; the violet grid never moves.</p></div>`,
+    (story: () => unknown) => `<div style="position:relative;min-height:400vh;background:var(--tl-surface-primary-background)">${story()}<p style="position:sticky;top:0;margin:0;padding:3rem;color:var(--tl-text-auxiliary-foreground);font-family:var(--tl-font-mono)">Move the pointer: the lime tint follows it. Scroll: cells grow by the scroll rate per viewport height, anchored to the bottom edge.</p></div>`,
   ],
 };
 
 export const Default = {};
 export const Louder = { args: { lineAlpha: 0.25, spotIntensity: 0.8, spotBloom: 0.15, spotRadius: '50vmax' } };
-export const Still = { args: { spotFollow: 1, breatheAmount: 0 } };
+export const Still = { args: { spotFollow: 1, breatheAmount: 0, scrollRate: 0 } };
+export const FastGrowth = { args: { scrollRate: 3 } };

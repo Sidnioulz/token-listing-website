@@ -16,6 +16,8 @@ interface Props {
   spotFollow?: number;
   breathePeriod?: string;
   breatheAmount?: number;
+  /** Cell growth per viewport height scrolled (1 = +100%). 0 disables. Off under reduced motion. */
+  scrollRate?: number;
   /** 'fixed' covers the viewport (site), 'absolute' fills a positioned parent (Storybook). */
   position?: 'fixed' | 'absolute';
 }
@@ -30,6 +32,7 @@ const style = [
   p.spotFollow != null && `--tl-spot-follow:${p.spotFollow}`,
   p.breathePeriod && `--tl-spot-breathe-period:${p.breathePeriod}`,
   p.breatheAmount != null && `--tl-spot-breathe-amount:${p.breatheAmount}`,
+  p.scrollRate != null && `--tl-grid-scroll-rate:${p.scrollRate}`,
 ].filter(Boolean).join(';');
 ---
 
@@ -45,15 +48,21 @@ const style = [
   .tl-grid-layer {
     position: absolute;
     inset: 0;
+    /* --tl-grid-cell-live is written by the scroll script; without it the cell is the static size */
+    --_cell: var(--tl-grid-cell-live, var(--tl-grid-cell));
     --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 100%), transparent);
     background-image:
       linear-gradient(to right, var(--_line) var(--tl-rule), transparent var(--tl-rule)),
       linear-gradient(to bottom, var(--_line) var(--tl-rule), transparent var(--tl-rule));
-    background-size: var(--tl-grid-cell) var(--tl-grid-cell);
+    background-size: var(--_cell) var(--_cell);
+    /* anchored to the bottom edge so a growing cell pushes the lines upward */
+    background-position: 0 100%;
   }
   .rest { --_c: var(--tl-grid-color-rest); }
   .spot {
     --_c: var(--tl-grid-color-spot);
+    /* the lime grid sits half a cell above the violet one, so its lines fall between the static lines */
+    background-position: 0 calc(100% - var(--_cell) / 2);
     --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 180%), transparent);
     --tl-spot-x: 50%;
     --tl-spot-y: 30%;
@@ -103,6 +112,25 @@ const style = [
     target.addEventListener('pointerleave', () => { idle(); wake(); });
     document.addEventListener('visibilitychange', () => { if (document.hidden && raf) { cancelAnimationFrame(raf); raf = 0; } else wake(); });
     wake();
+
+    // Scroll growth: cell = base * (1 + rate * scrollY / viewport height). Written once per frame
+    // onto this instance; both layers read it. Skipped entirely under reduced motion.
+    if (!reduced.matches) {
+      let pending = 0;
+      const apply = () => {
+        pending = 0;
+        const cs = getComputedStyle(root);
+        const base = parseFloat(cs.getPropertyValue('--tl-grid-cell')) || 40;
+        const rate = parseFloat(cs.getPropertyValue('--tl-grid-scroll-rate')) || 0;
+        if (!rate) { root.style.removeProperty('--tl-grid-cell-live'); return; }
+        const cell = base * (1 + rate * (window.scrollY / Math.max(1, window.innerHeight)));
+        root.style.setProperty('--tl-grid-cell-live', `${cell.toFixed(2)}px`);
+      };
+      const onScroll = () => { if (!pending) pending = requestAnimationFrame(apply); };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      apply();
+    }
   }
   document.querySelectorAll<HTMLElement>('[data-tl-grid]').forEach(setup);
 </script>

@@ -99,8 +99,8 @@ Rules:
 
 The grid is the most recognisable brand element and appears behind every page. It is two fixed layers:
 
-- A **static violet grid** (`surface-secondary-border` at `--tl-grid-line-alpha`). It never moves, never repaints.
-- A **lime copy of the grid** masked by a very large, soft radial gradient whose centre follows the cursor. A `requestAnimationFrame` loop lerps the centre toward the pointer and goes idle once converged, so it costs nothing while the mouse is still. Only two custom properties change per frame. A slow opacity breathe replaces any fixed pulse.
+- A **violet grid** (`--tl-grid-color-rest`, a saturated violet kept quiet by `--tl-grid-line-alpha`). It only repaints when the cell size changes on scroll.
+- A **lime copy of the grid**, offset upward by half a cell so its lines fall between the violet lines, masked by a very large, soft radial gradient whose centre follows the cursor. A `requestAnimationFrame` loop lerps the centre toward the pointer and goes idle once converged, so it costs nothing while the mouse is still. Only two custom properties change per frame. A slow opacity breathe replaces any fixed pulse.
 
 Parameters (all in `intents.css`, all overridable per instance of `GridBackground`):
 
@@ -115,12 +115,13 @@ Parameters (all in `intents.css`, all overridable per instance of `GridBackgroun
 | `--tl-spot-follow` | 0.3 | lerp factor per frame. 1 is instant. |
 | `--tl-spot-breathe-period` | 8s | breathe cycle. 0 disables. |
 | `--tl-spot-breathe-amount` | 0.35 | fraction of intensity that breathes away |
+| `--tl-grid-scroll-rate` | 1 | cell growth per viewport height scrolled (1 = +100%), no upper limit. Both layers are anchored to the bottom edge, so growth pushes lines upward. 0 disables. |
 
-Under reduced motion the spotlight parks at its idle position (top centre) and does not breathe.
+Under reduced motion the spotlight parks at its idle position (top centre), does not breathe, and the cell size does not change on scroll.
 
 ## 7. Icons
 
-- **Phosphor regular is the base set**, used through `astro-icon` as `ph:<name>`. It won the icon vote 12 to 9 against Starlight, Tabler and Lucide combined.
+- **Phosphor regular is the base set**, used through `astro-icon` as `ph:<name>`. It won the icon vote 12 to 9 against Starlight, Tabler and Lucide combined (Heroicons and Material Symbols got none).
 - Nine liked icons from other sets are kept as SVG files. `src/icons/original/` is the untouched source. `src/icons/adjusted/` is re-gridded to Phosphor's 256 canvas and 24..232 bounds, with 16-unit round strokes, which is Phosphor's 1.5px weight. Use `adjusted/<file>` on the site and keep `original/` for comparison. Starlight's filled glyphs could only be resized, not re-weighted.
 - **The chip is the brand treatment, not the glyph.** An icon on a surface sits in a square `IconChip`: lime glyph, `surface-auxiliary` background, 1px `surface-secondary` border that turns lime with the card. Chips are never chamfered so glyphs stay legible.
 - Inside buttons the icon is bare, 18px, after the label by default.
@@ -152,4 +153,3 @@ Every component is in Storybook under "Brand" with its variants and controls.
 - Light mode: mirror the dark values properly and verify contrast.
 - Logo and favicon.
 - Nested emphasis mode for sections that need to be louder, if one is ever needed.
-- Remove Lucide, Tabler, Heroicons and Material Symbols packages once the icon comparison page is deleted.

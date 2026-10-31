@@ -48,11 +48,11 @@
   --tl-font-sans: ui-sans-serif, system-ui, sans-serif;
 
   /* Grid (static) + spotlight (follows the cursor) */
-  --tl-grid-cell: 40px;
+  --tl-grid-cell: 60px;
   --tl-grid-line-alpha: 0.055; /* violet rest grid */
   --tl-grid-spot-line-alpha: 0.2; /* lime spotlight grid, before --tl-spot-intensity */
   --tl-grid-color-rest: #6d4df5; /* saturated violet; the alpha keeps it quiet, the hue keeps it from going grey */
-  --tl-grid-scroll-rate: 0.333; /* cell size grows by this fraction per viewport height scrolled (+33% per screen); 0 disables */
+  --tl-grid-scroll-rate: 0.333; /* cell width grows by this fraction per viewport height scrolled (+33% per screen); heights are constant; 0 disables */
   --tl-grid-color-spot: var(--tl-action-primary-background);
   --tl-spot-radius: 110vmax;
   --tl-spot-softness: 0%;

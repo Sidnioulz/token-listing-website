@@ -106,7 +106,7 @@ Parameters (all in `intents.css`, all overridable per instance of `GridBackgroun
 
 | Parameter | Default | Effect |
 |---|---|---|
-| `--tl-grid-cell` | 40px | cell size |
+| `--tl-grid-cell` | 60px | cell size (height is always this; width grows on scroll) |
 | `--tl-grid-line-alpha` | 0.055 | opacity of the violet lines |
 | `--tl-grid-spot-line-alpha` | 0.2 | opacity of the lime lines before `--tl-spot-intensity` is applied |
 | `--tl-spot-radius` | 110vmax | size of the lime region. Large on purpose so the whole grid tints and the effect is not localised enough to feel like it moves. |
@@ -116,9 +116,9 @@ Parameters (all in `intents.css`, all overridable per instance of `GridBackgroun
 | `--tl-spot-follow` | 0.3 | lerp factor per frame. 1 is instant. |
 | `--tl-spot-breathe-period` | 8s | breathe cycle. 0 disables. |
 | `--tl-spot-breathe-amount` | 0.35 | fraction of intensity that breathes away |
-| `--tl-grid-scroll-rate` | 0.333 | cell growth per viewport height scrolled (0.333 = +33%), no upper limit. Both layers are anchored bottom-centre, so growth pushes lines upward and outward from the middle. 0 disables. |
+| `--tl-grid-scroll-rate` | 0.333 | cell **width** growth per viewport height scrolled (0.333 = +33%), no upper limit. Heights never change. Both layers are anchored bottom-centre, so vertical lines spread outward from the middle. 0 disables. |
 
-Under reduced motion the spotlight parks at its idle position (top centre), does not breathe, and the cell size does not change on scroll.
+Under reduced motion the spotlight parks at its idle position (top centre), does not breathe, and the cell width does not change on scroll.
 
 ## 7. Icons
 

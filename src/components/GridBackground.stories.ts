@@ -17,9 +17,9 @@ export default {
     breatheAmount: { control: { type: 'range', min: 0, max: 1, step: 0.05 } },
     scrollRate: { control: { type: 'range', min: 0, max: 4, step: 0.25 } },
   },
-  args: { position: 'absolute', cell: '40px', lineAlpha: 0.055, spotLineAlpha: 0.2, spotRadius: '110vmax', spotSoftness: '0%', spotIntensity: 0.35, spotBloom: 0.05, spotFollow: 0.3, breathePeriod: '8s', breatheAmount: 0.35, scrollRate: 0.333 },
+  args: { position: 'absolute', cell: '60px', lineAlpha: 0.055, spotLineAlpha: 0.2, spotRadius: '110vmax', spotSoftness: '0%', spotIntensity: 0.35, spotBloom: 0.05, spotFollow: 0.3, breathePeriod: '8s', breatheAmount: 0.35, scrollRate: 0.333 },
   decorators: [
-    (story: () => unknown) => `<div style="position:relative;min-height:400vh;background:var(--tl-surface-primary-background)">${story()}<p style="position:sticky;top:0;margin:0;padding:3rem;color:var(--tl-text-auxiliary-foreground);font-family:var(--tl-font-mono)">Move the pointer: the lime tint follows it. Scroll: cells grow by the scroll rate per viewport height, anchored to the bottom edge.</p></div>`,
+    (story: () => unknown) => `<div style="position:relative;min-height:400vh;background:var(--tl-surface-primary-background)">${story()}<p style="position:sticky;top:0;margin:0;padding:3rem;color:var(--tl-text-auxiliary-foreground);font-family:var(--tl-font-mono)">Move the pointer: the lime tint follows it. Scroll: cells widen by the scroll rate per viewport height (heights stay constant), anchored bottom-centre.</p></div>`,
   ],
 };
 

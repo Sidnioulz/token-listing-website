@@ -17,7 +17,7 @@ interface Props {
   spotFollow?: number;
   breathePeriod?: string;
   breatheAmount?: number;
-  /** Cell growth per viewport height scrolled (1 = +100%). 0 disables. Off under reduced motion. */
+  /** Cell width growth per viewport height scrolled (1 = +100%); heights never change. 0 disables. Off under reduced motion. */
   scrollRate?: number;
   /** 'fixed' covers the viewport (site), 'absolute' fills a positioned parent (Storybook). */
   position?: 'fixed' | 'absolute';
@@ -50,13 +50,14 @@ const style = [
   .tl-grid-layer {
     position: absolute;
     inset: 0;
-    /* --tl-grid-cell-live is written by the scroll script; without it the cell is the static size */
-    --_cell: var(--tl-grid-cell-live, var(--tl-grid-cell));
+    /* Heights stay constant. --tl-grid-cell-live is written by the scroll script and only widens the cells. */
+    --_cell: var(--tl-grid-cell);
+    --_cell-x: var(--tl-grid-cell-live, var(--_cell));
     --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 100%), transparent);
     background-image:
       linear-gradient(to right, var(--_line) var(--tl-rule), transparent var(--tl-rule)),
       linear-gradient(to bottom, var(--_line) var(--tl-rule), transparent var(--tl-rule));
-    background-size: var(--_cell) var(--_cell);
+    background-size: var(--_cell-x) var(--_cell);
     /* anchored bottom-centre so a growing cell pushes lines upward and outward from the middle */
     background-position: 50% 100%;
   }
@@ -115,7 +116,7 @@ const style = [
     document.addEventListener('visibilitychange', () => { if (document.hidden && raf) { cancelAnimationFrame(raf); raf = 0; } else wake(); });
     wake();
 
-    // Scroll growth: cell = base * (1 + rate * scrollY / viewport height). Written once per frame
+    // Scroll growth (width only): cell = base * (1 + rate * scrollY / viewport height). Written once per frame
     // onto this instance; both layers read it. Skipped entirely under reduced motion.
     if (!reduced.matches) {
       let pending = 0;

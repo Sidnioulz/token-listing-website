@@ -1,0 +1,175 @@
+---
+/* PROTOTYPE — throwaway icon comparison table for /prototype-icons/. */
+import { Icon as SlIcon } from '@astrojs/starlight/components';
+import { Icon } from 'astro-icon/components';
+
+type Row = { concept: string; where: string; starlight: string[]; lucide: string[]; ph: string[]; tabler: string[]; heroicons: string[]; ms: string[] };
+
+// First Starlight entry is the icon in use today.
+const rows: Row[] = [
+  { concept: 'Get started', where: 'hero CTA', starlight: ['right-arrow', 'right-caret', 'rocket'], lucide: ['arrow-right', 'chevron-right', 'rocket'], ph: ['arrow-right', 'caret-right', 'rocket-launch'], tabler: ['arrow-right', 'chevron-right', 'rocket'], heroicons: ['arrow-right', 'chevron-right', 'rocket-launch'], ms: ['arrow-forward', 'chevron-right', 'rocket-launch'] },
+  { concept: 'Read the spec', where: 'hero CTA', starlight: ['document', 'open-book', 'notes'], lucide: ['file-text', 'scroll-text', 'book-open-text'], ph: ['file-text', 'scroll', 'book-open-text'], tabler: ['file-text', 'file-description', 'book'], heroicons: ['document-text', 'document', 'book-open'], ms: ['description', 'article', 'docs'] },
+  { concept: 'Interoperable', where: 'What is', starlight: ['puzzle', 'random', 'link'], lucide: ['puzzle', 'blocks', 'arrow-left-right'], ph: ['puzzle-piece', 'arrows-left-right', 'plugs-connected'], tabler: ['puzzle', 'arrows-exchange', 'plug-connected'], heroicons: ['puzzle-piece', 'arrows-right-left', 'link'], ms: ['extension', 'swap-horiz', 'hub'] },
+  { concept: 'Feature rich', where: 'What is', starlight: ['setting', 'star', 'analytics'], lucide: ['layers', 'sparkles', 'boxes'], ph: ['stack', 'sparkle', 'cube'], tabler: ['stack-2', 'sparkles', 'box-multiple'], heroicons: ['square-3-stack-3d', 'sparkles', 'cube'], ms: ['layers', 'auto-awesome', 'deployed-code'] },
+  { concept: 'Complements DTCG', where: 'What is', starlight: ['document', 'link-alt', 'add-document'], lucide: ['git-merge', 'link', 'file-json'], ph: ['git-merge', 'link', 'brackets-curly'], tabler: ['git-merge', 'link', 'json'], heroicons: ['link', 'document-plus', 'arrow-path'], ms: ['merge', 'link', 'data-object'] },
+  { concept: 'MCP servers', where: 'Who is it for', starlight: ['laptop', 'server', 'desktop'], lucide: ['server', 'bot', 'cpu'], ph: ['robot', 'hard-drives', 'cpu'], tabler: ['server', 'robot', 'cpu'], heroicons: ['server', 'cpu-chip', 'server-stack'], ms: ['dns', 'smart-toy', 'memory'] },
+  { concept: 'Code generation tools', where: 'Who is it for', starlight: ['right-arrow', 'code-branch', 'pencil'], lucide: ['code', 'braces', 'wand-sparkles'], ph: ['code', 'brackets-curly', 'magic-wand'], tabler: ['code', 'braces', 'wand'], heroicons: ['code-bracket', 'command-line', 'code-bracket-square'], ms: ['code', 'data-object', 'auto-fix-high'] },
+  { concept: 'Documentation sites', where: 'Who is it for', starlight: ['open-book', 'notes', 'document'], lucide: ['book-open', 'library', 'notebook'], ph: ['book-open', 'books', 'notebook'], tabler: ['book', 'books', 'notebook'], heroicons: ['book-open', 'academic-cap', 'document-duplicate'], ms: ['menu-book', 'library-books', 'auto-stories'] },
+  { concept: 'Diff & changelog generators', where: 'Who is it for', starlight: ['magnifier', 'code-branch', 'clock'], lucide: ['git-compare', 'diff', 'history'], ph: ['git-diff', 'clock-counter-clockwise', 'list-plus'], tabler: ['git-compare', 'history', 'file-diff'], heroicons: ['arrows-right-left', 'clock', 'document-duplicate'], ms: ['difference', 'history', 'compare-arrows'] },
+  { concept: 'Search indexes', where: 'Who is it for', starlight: ['magnifier', 'database', 'window'], lucide: ['search', 'scan-search', 'database'], ph: ['magnifying-glass', 'binoculars', 'database'], tabler: ['search', 'zoom-scan', 'database-search'], heroicons: ['magnifying-glass', 'circle-stack', 'magnifying-glass-circle'], ms: ['search', 'manage-search', 'database'] },
+  { concept: 'Linting tools', where: 'Who is it for', starlight: ['warning', 'approve-check-circle', 'error'], lucide: ['shield-check', 'check-check', 'scan-line'], ph: ['shield-check', 'check-square', 'warning'], tabler: ['shield-check', 'checklist', 'alert-triangle'], heroicons: ['shield-check', 'check-badge', 'exclamation-triangle'], ms: ['verified', 'rule', 'policy'] },
+  { concept: 'Tutorials', where: 'Where to start', starlight: ['rocket', 'star', 'approve-check'], lucide: ['rocket', 'graduation-cap', 'footprints'], ph: ['rocket-launch', 'graduation-cap', 'path'], tabler: ['rocket', 'school', 'route'], heroicons: ['rocket-launch', 'academic-cap', 'play'], ms: ['rocket-launch', 'school', 'play-circle'] },
+  { concept: 'How-to guides', where: 'Where to start', starlight: ['list-format', 'pencil', 'setting'], lucide: ['list-checks', 'wrench', 'compass'], ph: ['list-checks', 'wrench', 'compass'], tabler: ['list-check', 'tool', 'compass'], heroicons: ['list-bullet', 'wrench-screwdriver', 'map'], ms: ['checklist', 'build', 'explore'] },
+  { concept: 'Understanding', where: 'Where to start', starlight: ['information', 'question-circle', 'open-book'], lucide: ['lightbulb', 'brain', 'info'], ph: ['lightbulb', 'brain', 'info'], tabler: ['bulb', 'brain', 'info-circle'], heroicons: ['light-bulb', 'information-circle', 'eye'], ms: ['lightbulb', 'psychology', 'info'] },
+  { concept: 'Reference', where: 'Where to start', starlight: ['document', 'notes', 'database'], lucide: ['book-marked', 'library-big', 'file-json-2'], ph: ['bookmarks', 'books', 'book-bookmark'], tabler: ['book-2', 'bookmarks', 'file-code'], heroicons: ['book-open', 'bookmark', 'document-text'], ms: ['book-2', 'bookmark', 'menu-book'] },
+];
+
+// ---- Selected set (from prototype-icon-likes.json). Non-Phosphor picks get original + Phosphor-normalised copies
+// in src/icons/{original,adjusted}/, shown next to the closest Phosphor icon as a reference.
+type Pick = { lib: 'ph' } & { name: string } | { lib: 'local'; file: string; ref: string };
+const selected: { concept: string; picks: Pick[] }[] = [
+  { concept: 'Get started', picks: [{ lib: 'ph', name: 'rocket-launch' }] },
+  { concept: 'Read the spec', picks: [{ lib: 'ph', name: 'book-open-text' }, { lib: 'local', file: 'starlight-open-book', ref: 'book-open' }] },
+  { concept: 'Interoperable', picks: [{ lib: 'ph', name: 'plugs-connected' }] },
+  { concept: 'Feature rich', picks: [{ lib: 'ph', name: 'sparkle' }] },
+  { concept: 'Complements DTCG', picks: [{ lib: 'local', file: 'tabler-json', ref: 'brackets-curly' }] },
+  { concept: 'MCP servers', picks: [{ lib: 'local', file: 'starlight-server', ref: 'hard-drives' }, { lib: 'local', file: 'lucide-bot', ref: 'robot' }, { lib: 'local', file: 'tabler-robot', ref: 'robot' }] },
+  { concept: 'Code generation tools', picks: [{ lib: 'ph', name: 'magic-wand' }] },
+  { concept: 'Documentation sites', picks: [{ lib: 'ph', name: 'books' }, { lib: 'ph', name: 'notebook' }, { lib: 'local', file: 'starlight-open-book', ref: 'book-open' }] },
+  { concept: 'Diff & changelog generators', picks: [{ lib: 'local', file: 'lucide-diff', ref: 'git-diff' }] },
+  { concept: 'Search indexes', picks: [{ lib: 'local', file: 'starlight-database', ref: 'database' }, { lib: 'local', file: 'tabler-database-search', ref: 'database' }] },
+  { concept: 'Linting tools', picks: [{ lib: 'ph', name: 'shield-check' }] },
+  { concept: 'Tutorials', picks: [{ lib: 'ph', name: 'graduation-cap' }] },
+  { concept: 'How-to guides', picks: [{ lib: 'ph', name: 'list-checks' }] },
+  { concept: 'Understanding', picks: [{ lib: 'ph', name: 'lightbulb' }] },
+  { concept: 'Reference', picks: [{ lib: 'ph', name: 'book-bookmark' }] },
+];
+
+const libs: { key: keyof Row; label: string; prefix: string; note: string }[] = [
+  { key: 'lucide', label: 'Lucide', prefix: 'lucide', note: '2px stroke, 24 grid' },
+  { key: 'ph', label: 'Phosphor', prefix: 'ph', note: 'regular weight, 6 weights available' },
+  { key: 'tabler', label: 'Tabler', prefix: 'tabler', note: '2px stroke, 24 grid, 5k+ icons' },
+  { key: 'heroicons', label: 'Heroicons', prefix: 'heroicons', note: 'outline, 24 grid' },
+  { key: 'ms', label: 'Material Symbols', prefix: 'material-symbols', note: 'filled, 24 grid' },
+];
+---
+
+<div class="icon-compare selected">
+  <h2 id="selected-set">Selected set</h2>
+  <p>Phosphor picks are used as-is. For the others, <em>original</em> is the source SVG untouched, <em>adjusted</em> is re-gridded to Phosphor's 256 canvas and bounds with 16-unit round strokes, and <em>ref</em> is the nearest Phosphor icon for comparison. Starlight glyphs are filled paths, so only their size and position were normalised, not their stroke weight.</p>
+  <table>
+    <thead><tr><th>Concept</th><th>Picks</th></tr></thead>
+    <tbody>
+      {selected.map((row) => (
+        <tr>
+          <th scope="row">{row.concept}</th>
+          <td>
+            {row.picks.map((p) =>
+              p.lib === 'ph' ? (
+                <figure><span class="chip"><Icon name={`ph:${p.name}`} size={24} /></span><figcaption>ph:{p.name}</figcaption></figure>
+              ) : (
+                <span class="group">
+                  <figure><span class="chip"><Icon name={`original/${p.file}`} size={24} /></span><figcaption>original<br />{p.file}</figcaption></figure>
+                  <figure><span class="chip"><Icon name={`adjusted/${p.file}`} size={24} /></span><figcaption>adjusted</figcaption></figure>
+                  <figure class="ref"><span class="chip"><Icon name={`ph:${p.ref}`} size={24} /></span><figcaption>ref ph:{p.ref}</figcaption></figure>
+                </span>
+              )
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <h2 id="comparison">Full comparison</h2>
+  <p class="tally" aria-live="polite">Click an icon to like it. <span id="tally-out">No likes yet.</span> <button type="button" id="tally-clear">Clear</button></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Concept</th>
+        <th>Starlight <small>current first</small></th>
+        {libs.map((l) => <th>{l.label} <small>{l.note}</small></th>)}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <th scope="row">{r.concept}<small>{r.where}</small></th>
+          <td>
+            {r.starlight.map((n, i) => (
+              <figure class:list={[{ current: i === 0 }]} data-lib="Starlight" data-icon={n} data-concept={r.concept}>
+                <button type="button" class="chip" aria-pressed="false" aria-label={`Like Starlight ${n} for ${r.concept}`}><SlIcon name={n as any} size="1.5rem" /></button>
+                <figcaption>{n}</figcaption>
+              </figure>
+            ))}
+          </td>
+          {libs.map((l) => (
+            <td>
+              {(r[l.key] as string[]).map((n) => (
+                <figure data-lib={l.label} data-icon={`${l.prefix}:${n}`} data-concept={r.concept}>
+                  <button type="button" class="chip" aria-pressed="false" aria-label={`Like ${l.label} ${n} for ${r.concept}`}><Icon name={`${l.prefix}:${n}`} size={24} /></button>
+                  <figcaption>{n}</figcaption>
+                </figure>
+              ))}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style is:global>
+  html { --tl-chip-bg: #160840; --tl-chip-border: #4d3a9e; --tl-chip-fg: #a3df00; --tl-muted: #a89adf; }
+  html[data-theme='light'] { --tl-chip-bg: #f2f0ff; --tl-chip-border: #c4b8f5; --tl-chip-fg: #2d5a00; --tl-muted: #6b50d8; }
+  .sl-container:has(.icon-compare) { max-width: 100rem; }
+  .icon-compare { overflow-x: auto; }
+  .icon-compare table { display: table; width: 100%; border-collapse: collapse; font-size: var(--sl-text-sm); }
+  .icon-compare th, .icon-compare td { vertical-align: top; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--sl-color-hairline); text-align: left; }
+  .icon-compare thead tr { background: transparent; }
+  .icon-compare thead th { position: static; }
+  .icon-compare .tally { font-size: var(--sl-text-sm); color: var(--tl-muted); display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .icon-compare .tally strong { color: var(--tl-chip-fg); font-family: var(--__sl-font-mono); }
+  .icon-compare .tally button { font: inherit; font-size: var(--sl-text-xs); background: transparent; color: var(--tl-muted); border: 1px solid var(--tl-chip-border); padding: 0.1rem 0.5rem; cursor: pointer; }
+  .icon-compare figure[data-liked] .chip { background: var(--tl-chip-fg); color: #05001a; border-color: var(--tl-chip-fg); }
+  .icon-compare figure[data-liked] figcaption { color: var(--tl-chip-fg); }
+  .icon-compare th small { display: block; font-weight: 400; color: var(--tl-muted); font-size: var(--sl-text-xs); }
+  .icon-compare tbody th { white-space: nowrap; font-weight: 600; }
+  .icon-compare td { white-space: nowrap; }
+  .icon-compare figure { display: inline-flex; flex-direction: column; align-items: center; gap: 0.3rem; margin: 0 0.35rem 0 0; width: 4.6rem; }
+  .icon-compare figure.current .chip { border-color: var(--tl-chip-fg); }
+  .icon-compare figcaption { font-family: var(--__sl-font-mono); font-size: 0.65rem; color: var(--tl-muted); white-space: normal; text-align: center; line-height: 1.2; }
+  .icon-compare .chip { display: inline-grid; place-items: center; width: 2.6rem; height: 2.6rem; padding: 0; background: var(--tl-chip-bg); border: 1px solid var(--tl-chip-border); color: var(--tl-chip-fg); cursor: pointer; transition: border-color 120ms, background-color 120ms, color 120ms; }
+  .icon-compare .chip:hover { border-color: var(--tl-chip-fg); }
+  .icon-compare .chip:focus-visible { outline: 2px solid var(--tl-chip-fg); outline-offset: 2px; }
+  .icon-compare .chip svg { width: 1.5rem; height: 1.5rem; }
+  .icon-compare .group { display: inline-flex; gap: 0.2rem; margin-right: 1.25rem; padding: 0.3rem; border: 1px dashed var(--tl-chip-border); }
+  .icon-compare figure.ref .chip { opacity: 0.55; }
+  .icon-compare.selected h2 { margin-top: 2rem; }
+  .icon-compare.selected td { white-space: normal; }
+</style>
+
+<script>
+  const KEY = 'proto-icon-likes';
+  const figs = Array.from(document.querySelectorAll<HTMLElement>('.icon-compare figure[data-lib]'));
+  const out = document.getElementById('tally-out')!;
+  const id = (f: HTMLElement) => `${f.dataset.lib}|${f.dataset.icon}|${f.dataset.concept}`;
+  let likes = new Set<string>();
+  try { likes = new Set(JSON.parse(localStorage.getItem(KEY) ?? '[]')); } catch {}
+  function render() {
+    const counts: Record<string, number> = {};
+    for (const f of figs) {
+      const on = likes.has(id(f));
+      f.toggleAttribute('data-liked', on);
+      f.querySelector('button')!.setAttribute('aria-pressed', String(on));
+      if (on) counts[f.dataset.lib!] = (counts[f.dataset.lib!] ?? 0) + 1;
+    }
+    const parts = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} <strong>${v}</strong>`);
+    out.innerHTML = parts.length ? `${likes.size} liked: ` + parts.join(' · ') : 'No likes yet.';
+    try { localStorage.setItem(KEY, JSON.stringify([...likes])); } catch {}
+  }
+  for (const f of figs) f.querySelector('button')!.addEventListener('click', () => {
+    const k = id(f); likes.has(k) ? likes.delete(k) : likes.add(k); render();
+  });
+  document.getElementById('tally-clear')!.addEventListener('click', () => { likes.clear(); render(); });
+  render();
+</script>

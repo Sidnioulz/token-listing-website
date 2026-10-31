@@ -1,0 +1,21 @@
+{
+  "tally": { "Phosphor": 12, "Starlight": 4, "Tabler": 3, "Lucide": 2 },
+  "base": "Phosphor regular (@iconify-json/ph)",
+  "byConcept": {
+    "Get started": ["ph:rocket-launch"],
+    "Read the spec": ["ph:book-open-text", "starlight:open-book"],
+    "Interoperable": ["ph:plugs-connected"],
+    "Feature rich": ["ph:sparkle"],
+    "Complements DTCG": ["tabler:json"],
+    "MCP servers": ["starlight:server", "lucide:bot", "tabler:robot"],
+    "Code generation tools": ["ph:magic-wand"],
+    "Documentation sites": ["ph:books", "ph:notebook", "starlight:open-book"],
+    "Diff & changelog generators": ["lucide:diff"],
+    "Search indexes": ["starlight:database", "tabler:database-search"],
+    "Linting tools": ["ph:shield-check"],
+    "Tutorials": ["ph:graduation-cap"],
+    "How-to guides": ["ph:list-checks"],
+    "Understanding": ["ph:lightbulb"],
+    "Reference": ["ph:book-bookmark"]
+  }
+}

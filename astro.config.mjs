@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import icon from 'astro-icon';
 
 export default defineConfig({
 	site: 'https://token-listing.org',
@@ -9,6 +10,7 @@ export default defineConfig({
 		'/versioning/': '/explanation/design-decisions/#forward-compatibility-and-versioning',
 	},
 	integrations: [
+		icon(),
 		starlight({
 			title: 'Token Listing',
 			description: 'The design-token interchange format for build tools.',

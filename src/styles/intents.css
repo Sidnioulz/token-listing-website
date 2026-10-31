@@ -1,0 +1,93 @@
+/* ============================================================
+   Token Listing brand intents.
+   Naming: --tl-{purpose}-{priority}-{property}
+     purpose  action | surface | text
+     priority primary (lime, "look here") | secondary (violet, load-bearing) | auxiliary (muted)
+     property background | foreground | border
+   Modes re-value these; they never add tokens. Dark is the root mode, light mirrors it.
+   ============================================================ */
+:root,
+[data-theme='dark'] {
+  --tl-action-primary-background: #a3df00;
+  --tl-action-primary-foreground: #05001a;
+  --tl-action-primary-border: #a3df00;
+  --tl-action-secondary-background: transparent;
+  --tl-action-secondary-foreground: #a89adf;
+  --tl-action-secondary-border: #7b61ff;
+  --tl-action-auxiliary-background: transparent;
+  --tl-action-auxiliary-foreground: #a89adf;
+  --tl-action-auxiliary-border: transparent;
+
+  --tl-surface-primary-background: #05001a;
+  --tl-surface-primary-foreground: #f0eeff;
+  --tl-surface-primary-border: #a3df00;
+  --tl-surface-secondary-background: #0d0530;
+  --tl-surface-secondary-foreground: #f0eeff;
+  --tl-surface-secondary-border: #4d3a9e;
+  --tl-surface-auxiliary-background: #160840;
+  --tl-surface-auxiliary-foreground: #d4cdf5;
+  --tl-surface-auxiliary-border: #2a1e60;
+
+  --tl-text-primary-foreground: #a3df00;
+  --tl-text-secondary-foreground: #f0eeff;
+  --tl-text-auxiliary-foreground: #a89adf;
+
+  /* Shape */
+  --tl-bevel-sm: 6px;
+  --tl-bevel-lg: 14px;
+  --tl-rule: 1px;
+
+  /* Motion: two interaction speeds, one easing family; ambient motion is slow */
+  --tl-motion-fast: 120ms;
+  --tl-motion-base: 200ms;
+  --tl-ease: cubic-bezier(0.2, 0, 0, 1);
+  --tl-ease-ambient: ease-in-out;
+
+  /* Type: system sans for reading, system mono as the label voice */
+  --tl-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+  --tl-font-sans: ui-sans-serif, system-ui, sans-serif;
+
+  /* Grid (static) + spotlight (follows the cursor) */
+  --tl-grid-cell: 40px;
+  --tl-grid-line-alpha: 0.11;
+  --tl-grid-color-rest: var(--tl-surface-secondary-border);
+  --tl-grid-color-spot: var(--tl-action-primary-background);
+  --tl-spot-radius: 110vmax;
+  --tl-spot-softness: 0%;
+  --tl-spot-intensity: 0.35;
+  --tl-spot-bloom: 0.05;
+  --tl-spot-follow: 0.3;
+  --tl-spot-breathe-period: 8s;
+  --tl-spot-breathe-amount: 0.35;
+}
+
+/* Light mode: a first mirror. To be tuned once dark is finished. */
+[data-theme='light'] {
+  --tl-action-primary-background: #2d5a00;
+  --tl-action-primary-foreground: #ffffff;
+  --tl-action-primary-border: #2d5a00;
+  --tl-action-secondary-foreground: #5a3fcf;
+  --tl-action-secondary-border: #5a3fcf;
+  --tl-action-auxiliary-foreground: #5a3fcf;
+
+  --tl-surface-primary-background: #ffffff;
+  --tl-surface-primary-foreground: #1a0d40;
+  --tl-surface-primary-border: #2d5a00;
+  --tl-surface-secondary-background: #f2f0ff;
+  --tl-surface-secondary-foreground: #1a0d40;
+  --tl-surface-secondary-border: #c4b8f5;
+  --tl-surface-auxiliary-background: #e4deff;
+  --tl-surface-auxiliary-foreground: #312070;
+  --tl-surface-auxiliary-border: #c4b8f5;
+
+  --tl-text-primary-foreground: #2d5a00;
+  --tl-text-secondary-foreground: #1a0d40;
+  --tl-text-auxiliary-foreground: #6b50d8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --tl-motion-fast: 0ms;
+    --tl-motion-base: 0ms;
+  }
+}

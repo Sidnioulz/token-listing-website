@@ -1,0 +1,7 @@
+@import '../src/styles/intents.css';
+
+html, body, .sb-show-main {
+  background: var(--tl-surface-primary-background) !important;
+  color: var(--tl-surface-primary-foreground);
+  font-family: var(--tl-font-sans);
+}

@@ -1,0 +1,108 @@
+---
+/**
+ * Fixed, full-viewport brand background: a static violet grid plus a lime copy of the
+ * grid masked by a large soft radial that follows the cursor. Only two custom properties
+ * change per frame, on one layer, and the rAF loop sleeps once it has converged.
+ * Every parameter is a --tl-grid-* / --tl-spot-* custom property (see intents.css);
+ * props override them for this instance.
+ */
+interface Props {
+  cell?: string;
+  lineAlpha?: number;
+  spotRadius?: string;
+  spotSoftness?: string;
+  spotIntensity?: number;
+  spotBloom?: number;
+  spotFollow?: number;
+  breathePeriod?: string;
+  breatheAmount?: number;
+  /** 'fixed' covers the viewport (site), 'absolute' fills a positioned parent (Storybook). */
+  position?: 'fixed' | 'absolute';
+}
+const p = Astro.props;
+const style = [
+  p.cell && `--tl-grid-cell:${p.cell}`,
+  p.lineAlpha != null && `--tl-grid-line-alpha:${p.lineAlpha}`,
+  p.spotRadius && `--tl-spot-radius:${p.spotRadius}`,
+  p.spotSoftness && `--tl-spot-softness:${p.spotSoftness}`,
+  p.spotIntensity != null && `--tl-spot-intensity:${p.spotIntensity}`,
+  p.spotBloom != null && `--tl-spot-bloom:${p.spotBloom}`,
+  p.spotFollow != null && `--tl-spot-follow:${p.spotFollow}`,
+  p.breathePeriod && `--tl-spot-breathe-period:${p.breathePeriod}`,
+  p.breatheAmount != null && `--tl-spot-breathe-amount:${p.breatheAmount}`,
+].filter(Boolean).join(';');
+---
+
+<div class:list={['tl-grid-bg', p.position ?? 'fixed']} style={style} aria-hidden="true" data-tl-grid>
+  <div class="tl-grid-layer rest"></div>
+  <div class="tl-grid-layer spot"></div>
+</div>
+
+<style>
+  .tl-grid-bg { inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .fixed { position: fixed; }
+  .absolute { position: absolute; }
+  .tl-grid-layer {
+    position: absolute;
+    inset: 0;
+    --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 100%), transparent);
+    background-image:
+      linear-gradient(to right, var(--_line) var(--tl-rule), transparent var(--tl-rule)),
+      linear-gradient(to bottom, var(--_line) var(--tl-rule), transparent var(--tl-rule));
+    background-size: var(--tl-grid-cell) var(--tl-grid-cell);
+  }
+  .rest { --_c: var(--tl-grid-color-rest); }
+  .spot {
+    --_c: var(--tl-grid-color-spot);
+    --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 180%), transparent);
+    --tl-spot-x: 50%;
+    --tl-spot-y: 30%;
+    opacity: var(--tl-spot-intensity);
+    mask-image: radial-gradient(circle var(--tl-spot-radius) at var(--tl-spot-x) var(--tl-spot-y), black var(--tl-spot-softness), transparent 100%);
+    will-change: mask-position, opacity;
+    animation: tl-spot-breathe var(--tl-spot-breathe-period) var(--tl-ease-ambient) infinite alternate;
+  }
+  .spot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle var(--tl-spot-radius) at var(--tl-spot-x) var(--tl-spot-y),
+      color-mix(in srgb, var(--tl-grid-color-spot) calc(var(--tl-spot-bloom) * 100%), transparent), transparent 100%);
+  }
+  @keyframes tl-spot-breathe {
+    from { opacity: var(--tl-spot-intensity); }
+    to { opacity: calc(var(--tl-spot-intensity) * (1 - var(--tl-spot-breathe-amount))); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spot { animation: none; }
+  }
+</style>
+
+<script>
+  function setup(root: HTMLElement) {
+    const spot = root.querySelector<HTMLElement>('.spot')!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const box = () => root.getBoundingClientRect();
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+    const idle = () => { const b = box(); tx = b.width / 2; ty = b.height * 0.3; };
+    idle(); cx = tx; cy = ty;
+    const follow = () => parseFloat(getComputedStyle(root).getPropertyValue('--tl-spot-follow')) || 0.3;
+    function frame() {
+      const k = reduced.matches ? 1 : follow();
+      cx += (tx - cx) * k; cy += (ty - cy) * k;
+      spot.style.setProperty('--tl-spot-x', `${cx.toFixed(1)}px`);
+      spot.style.setProperty('--tl-spot-y', `${cy.toFixed(1)}px`);
+      raf = Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3 ? requestAnimationFrame(frame) : 0;
+    }
+    const wake = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const target = root.classList.contains('fixed') ? window : (root.parentElement ?? window);
+    target.addEventListener('pointermove', (e) => {
+      const ev = e as PointerEvent; const b = box();
+      tx = ev.clientX - b.left; ty = ev.clientY - b.top; wake();
+    }, { passive: true });
+    target.addEventListener('pointerleave', () => { idle(); wake(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden && raf) { cancelAnimationFrame(raf); raf = 0; } else wake(); });
+    wake();
+  }
+  document.querySelectorAll<HTMLElement>('[data-tl-grid]').forEach(setup);
+</script>

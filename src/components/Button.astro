@@ -1,0 +1,102 @@
+---
+/**
+ * Action button. Priority mirrors the intent scale:
+ *  primary   lime fill, the one thing to do on the page
+ *  secondary outlined violet, behaves like a surface
+ *  auxiliary text only
+ * Four chamfered corners via corner-shape (square where unsupported).
+ */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'auxiliary';
+  icon?: string;
+  iconPosition?: 'start' | 'end';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = 'primary', icon, iconPosition = 'end', class: className, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag href={href} class:list={['tl-button', variant, className]} {...rest}>
+  {icon && iconPosition === 'start' && <Icon name={icon} size={18} />}
+  <span class="tl-button-label"><slot /></span>
+  {icon && iconPosition === 'end' && <Icon name={icon} size={18} />}
+</Tag>
+
+<style>
+  .tl-button {
+    /* Overridable per instance via --tl-button-*; these are the defaults. */
+    --_pad: var(--tl-button-padding, 0.625rem 1rem);
+    --_gap: var(--tl-button-gap, 0.6em);
+    --_size: var(--tl-button-size, 0.9375rem);
+    --_weight: var(--tl-button-weight, 600);
+    --_case: var(--tl-button-case, none);
+    --_tracking: var(--tl-button-tracking, 0.02em);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--_gap);
+    padding: var(--_pad);
+    font: var(--_weight) var(--_size) / 1.2 var(--tl-font-mono);
+    letter-spacing: var(--_tracking);
+    text-transform: var(--_case);
+    text-decoration: none;
+    cursor: pointer;
+    border: var(--tl-rule) solid transparent;
+    border-radius: var(--tl-bevel-sm);
+    corner-shape: bevel;
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+    transition:
+      background-color var(--tl-motion-fast) var(--tl-ease),
+      border-color var(--tl-motion-fast) var(--tl-ease),
+      color var(--tl-motion-fast) var(--tl-ease),
+      outline-color var(--tl-motion-fast) var(--tl-ease),
+      translate var(--tl-motion-base) var(--tl-ease);
+  }
+  /* Mono glyphs sit low in their line box; size the label to its cap height and
+     nudge the icon so both centre on the same optical line. */
+  .tl-button-label { line-height: 1; }
+  .tl-button :global(svg) { flex-shrink: 0; display: block; margin-block: -0.1em -0.05em; }
+
+  .primary {
+    background: var(--tl-action-primary-background);
+    border-color: var(--tl-action-primary-border);
+    color: var(--tl-action-primary-foreground);
+  }
+  .primary:hover {
+    background: color-mix(in oklab, var(--tl-action-primary-background), white 12%);
+    border-color: color-mix(in oklab, var(--tl-action-primary-border), white 12%);
+    translate: 0 -1px;
+  }
+
+  .secondary {
+    background: var(--tl-action-secondary-background);
+    border-color: var(--tl-action-secondary-border);
+    color: var(--tl-action-secondary-foreground);
+  }
+  .secondary:hover {
+    border-color: var(--tl-action-primary-border);
+    color: var(--tl-text-primary-foreground);
+  }
+
+  .auxiliary {
+    background: var(--tl-action-auxiliary-background);
+    border-color: var(--tl-action-auxiliary-border);
+    color: var(--tl-action-auxiliary-foreground);
+    padding-inline: 0.75rem;
+  }
+  .auxiliary:hover {
+    color: var(--tl-text-primary-foreground);
+  }
+
+  .tl-button:focus-visible {
+    outline-color: var(--tl-action-primary-border);
+  }
+  .tl-button:active {
+    translate: 0 0;
+  }
+</style>

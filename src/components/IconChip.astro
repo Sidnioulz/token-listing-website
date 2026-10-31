@@ -1,0 +1,33 @@
+---
+/** Square chip that frames an icon: lime glyph on an auxiliary surface. Never chamfered, glyphs stay legible. */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  name: string;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+const { name, size = 'md', class: className } = Astro.props;
+---
+
+<span class:list={['tl-chip', size, className]} aria-hidden="true">
+  <Icon name={name} />
+</span>
+
+<style>
+  .tl-chip {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: var(--_s);
+    height: var(--_s);
+    background: var(--tl-surface-auxiliary-background);
+    border: var(--tl-rule) solid var(--tl-surface-secondary-border);
+    color: var(--tl-text-primary-foreground);
+    transition: border-color var(--tl-motion-fast) var(--tl-ease);
+  }
+  .tl-chip :global(svg) { width: calc(var(--_s) * 0.55); height: calc(var(--_s) * 0.55); }
+  .sm { --_s: 1.75rem; }
+  .md { --_s: 2.5rem; }
+  .lg { --_s: 3.5rem; }
+</style>

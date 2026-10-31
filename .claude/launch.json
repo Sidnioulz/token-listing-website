@@ -4,8 +4,21 @@
     {
       "name": "astro-dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev", "--port", "4321"],
+      "runtimeArgs": [
+        "dev",
+        "--port",
+        "4321"
+      ],
       "port": 4321
+    },
+    {
+      "name": "storybook",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "storybook",
+        "--no-open"
+      ],
+      "port": 6006
     }
   ]
 }

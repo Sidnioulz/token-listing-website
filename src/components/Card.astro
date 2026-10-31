@@ -1,0 +1,66 @@
+---
+/**
+ * Surface card: 1px border that turns lime on hover, one chamfered corner (top-right),
+ * mono uppercase title with an icon chip. Default slot is the body.
+ */
+import IconChip from './IconChip.astro';
+
+interface Props {
+  title: string;
+  icon?: string;
+  href?: string;
+  class?: string;
+}
+const { title, icon, href, class: className } = Astro.props;
+const Tag = href ? 'a' : 'article';
+---
+
+<Tag href={href} class:list={['tl-card', className]}>
+  <p class="tl-card-title">
+    {icon && <IconChip name={icon} size="md" />}
+    <span>{title}</span>
+  </p>
+  <div class="tl-card-body"><slot /></div>
+</Tag>
+
+<style>
+  .tl-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1rem, calc(0.125rem + 3vw), 2rem);
+    background: var(--tl-surface-secondary-background);
+    color: var(--tl-surface-secondary-foreground);
+    border: var(--tl-rule) solid var(--tl-surface-secondary-border);
+    border-radius: 0 var(--tl-bevel-lg) 0 0;
+    corner-shape: bevel;
+    text-decoration: none;
+    transition: border-color var(--tl-motion-fast) var(--tl-ease);
+  }
+  .tl-card:hover,
+  .tl-card:focus-within {
+    border-color: var(--tl-surface-primary-border);
+  }
+  .tl-card:hover :global(.tl-chip),
+  .tl-card:focus-within :global(.tl-chip) {
+    border-color: var(--tl-surface-primary-border);
+  }
+  .tl-card-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    font: 600 1rem/1.2 var(--tl-font-mono);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--tl-text-secondary-foreground);
+  }
+  .tl-card-body {
+    color: var(--tl-text-auxiliary-foreground);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .tl-card-body :global(p) { margin: 0; }
+  .tl-card-body :global(a) { color: var(--tl-action-secondary-foreground); text-decoration: underline; text-underline-offset: 0.15em; transition: color var(--tl-motion-fast) var(--tl-ease); }
+  .tl-card-body :global(a:hover) { color: var(--tl-text-primary-foreground); }
+</style>

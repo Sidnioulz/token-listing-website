@@ -55,9 +55,28 @@
   --ec-ttb-bdBtmCol: #2a1e60;
 }
 
-/* Splash page hero — make tagline pop */
-.hero > .sl-flex {
+/* Splash page hero */
+.hero > .stack {
   gap: 2rem;
+}
+
+/* No hero image: give the copy the full width so the title stays on one line,
+   and pull the first section up closer to the hero. */
+@media (min-width: 50rem) {
+  .hero {
+    grid-template-columns: 100%;
+    padding-block: clamp(2rem, 5vmin, 4rem) clamp(1rem, 3vmin, 2rem);
+  }
+}
+
+.hero h1 {
+  text-wrap: nowrap;
+  font-size: clamp(var(--sl-text-3xl), calc(0.25rem + 4.5vw), var(--sl-text-6xl));
+}
+
+/* Card grids following a paragraph need room to breathe */
+.sl-markdown-content :is(p, ul) + .card-grid {
+  margin-top: 2.5rem;
 }
 
 .hero .tagline {
@@ -75,6 +94,15 @@
 [data-theme='dark'] a[aria-current='page'] {
   color: var(--sl-color-accent-high) !important;
   background-color: var(--sl-color-accent-low) !important;
+}
+
+/* Larger base body size for prose; cards follow via --sl-text-body */
+:root {
+  --sl-text-body: var(--sl-text-lg);
+}
+
+.sl-markdown-content {
+  font-size: var(--sl-text-body);
 }
 
 /* Inline code — give it a little more breathing room */

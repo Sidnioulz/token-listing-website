@@ -1,0 +1,12 @@
+---
+/** Starlight PageFrame override: the default frame plus the brand grid behind every page. */
+import Default from '@astrojs/starlight/components/PageFrame.astro';
+import GridBackground from '../GridBackground.astro';
+---
+
+<Default {...Astro.props}>
+  <slot name="header" slot="header" />
+  <slot name="sidebar" slot="sidebar" />
+  <slot />
+</Default>
+<GridBackground />

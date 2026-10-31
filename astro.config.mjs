@@ -22,6 +22,10 @@ export default defineConfig({
 				},
 			],
 			customCss: ['./src/styles/custom.css'],
+			components: {
+				Hero: './src/components/starlight/Hero.astro',
+				PageFrame: './src/components/starlight/PageFrame.astro',
+			},
 			expressiveCode: {
 				themes: ['dracula', 'github-light'],
 			},

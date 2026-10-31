@@ -7,15 +7,18 @@ hero:
   actions:
     - text: Get started
       link: /tutorials/first-listing/
-      icon: right-arrow
       variant: primary
+      attrs:
+        icon: ph:rocket-launch
     - text: Read the spec
       link: /spec/
-      icon: document
-      variant: minimal
+      variant: secondary
+      attrs:
+        icon: ph:book-open-text
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import Card from '../../components/Card.astro';
+import CardGrid from '../../components/CardGrid.astro';
 
 ## What is Token Listing?
 
@@ -28,36 +31,36 @@ Because of that, building interoperable tools for design tokens in code seems im
 The Token Listing format fills that gap: it's produced by token translation tools like Style Dictionary and Terrazzo, and maps DTCG tokens to their exact representations in code. It provides a predictable, machine-readable structure for tools to manipulate tokens in code environments regardless of how they're actually implemented.
 
 <CardGrid>
-  <Card title="Interoperable" icon="puzzle">
+  <Card title="Interoperable" icon="ph:plugs-connected">
     Any compliant translator's output is consumable by any compliant consumer. Switch tools without rewriting your token data pipelines.
   </Card>
-  <Card title="Feature Rich" icon="setting">
-    Token Listing makes it trivial to read per-platform names and values for design tokens. It helps tools navigate alias chains and mode resolution, preview tokens without custom parsers, and extends the list of token types supported by DTCG.
+  <Card title="Feature Rich" icon="ph:sparkle">
+    Trivially map token names and values to each code platform. Navigate alias chains and mode resolution, preview tokens without custom parsers, and extend the list of token types supported by DTCG.
   </Card>
-  <Card title="Complements DTCG" icon="document">
-  DTCG describes source design tokens as they are authored. Token Listing extends design token data via DTCG extensions, making it easy to support in DTCG compliant tools.
+  <Card title="Complements DTCG" icon="adjusted/tabler-json">
+  DTCG describes source design tokens as they are authored. Token Listing is built on DTCG's extension mechanism, making it easy to support in DTCG compliant tools.
   </Card>
 </CardGrid>
 
 ## Who is it for?
 
 <CardGrid>
-  <Card title="MCP servers" icon="laptop">
+  <Card title="MCP servers" icon="adjusted/tabler-robot">
     Expose structured token data to AI assistants and agent-based tooling.
   </Card>
-  <Card title="Code generation tools" icon="right-arrow">
+  <Card title="Code generation tools" icon="ph:magic-wand">
     Translate token names accurately during code generation or translation.
   </Card>
-  <Card title="Documentation sites" icon="open-book">
+  <Card title="Documentation sites" icon="ph:books">
     Render token previews, names, and descriptions regardless of how complex your tokens are.
   </Card>
-  <Card title="Diff &amp; changelog generators" icon="magnifier">
+  <Card title="Diff &amp; changelog generators" icon="adjusted/lucide-diff">
     Track which tokens changed, were added, removed or deprecated between releases.
   </Card>
-  <Card title="Search indexes" icon="magnifier">
+  <Card title="Search indexes" icon="adjusted/tabler-database-search">
     Power "find this token" features in IDEs and design tool plugins.
   </Card>
-  <Card title="Linting tools" icon="warning">
+  <Card title="Linting tools" icon="ph:shield-check">
     Enforce token pairing policies based on their subtypes, prevent deprecated token usage, etc.
   </Card>
 </CardGrid>
@@ -65,16 +68,16 @@ The Token Listing format fills that gap: it's produced by token translation tool
 ## Where to start
 
 <CardGrid>
-  <Card title="Tutorials" icon="rocket">
+  <Card title="Tutorials" icon="ph:graduation-cap">
     Learn by doing. [Build your first Token Listing](/tutorials/first-listing/) with Terrazzo, then [read one in your own tool](/tutorials/read-a-listing/) in forty lines of JavaScript.
   </Card>
-  <Card title="How-to guides" icon="list-format">
+  <Card title="How-to guides" icon="ph:list-checks">
     Get a job done: [show tokens in Storybook with Swatchbook](/how-to/storybook-swatchbook/), [generate a listing with Terrazzo](/how-to/terrazzo/), or check the status of [Style Dictionary support](/how-to/style-dictionary/).
   </Card>
-  <Card title="Understanding" icon="information">
+  <Card title="Understanding" icon="ph:lightbulb">
     Read [why the format exists](/explanation/why-token-listing/), [how it relates to DTCG](/explanation/token-listing-and-dtcg/), and [the decisions behind its shape](/explanation/design-decisions/).
   </Card>
-  <Card title="Reference" icon="document">
+  <Card title="Reference" icon="ph:book-bookmark">
     The normative [specification](/spec/), annotated [examples](/examples/), the [glossary](/glossary/) and the [JSON Schema](/schema.json).
   </Card>
 </CardGrid>

@@ -1,0 +1,56 @@
+---
+/**
+ * Starlight Hero override. Reads the same frontmatter (`hero.tagline`, `hero.actions`) but renders
+ * brand Buttons. An action's icon is read from `attrs.icon` as an Iconify name (e.g. ph:rocket-launch)
+ * because Starlight's own `icon` field only accepts its built-in set.
+ */
+import Button from '../Button.astro';
+
+const { data } = Astro.locals.starlightRoute.entry;
+const { title = data.title, tagline, actions = [] } = data.hero || {};
+const variantMap: Record<string, 'primary' | 'secondary' | 'auxiliary'> = { primary: 'primary', secondary: 'secondary', minimal: 'auxiliary' };
+---
+
+<div class="tl-hero">
+  <h1 id="_top" data-page-title set:html={title} />
+  {tagline && <p class="tl-hero-tagline" set:html={tagline} />}
+  {actions.length > 0 && (
+    <div class="tl-hero-actions">
+      {actions.map(({ attrs: { icon, ...attrs } = {}, link, text, variant }) => (
+        <Button href={link} variant={variantMap[variant] ?? 'secondary'} icon={icon as string | undefined} {...attrs}>{text}</Button>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .tl-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-block: clamp(2rem, 5vmin, 4rem) clamp(1rem, 3vmin, 2rem);
+  }
+  .tl-hero h1 {
+    margin: 0;
+    font-size: clamp(var(--sl-text-3xl), calc(0.25rem + 4.5vw), var(--sl-text-6xl));
+    line-height: var(--sl-line-height-headings);
+    font-weight: 700;
+    color: var(--tl-text-primary-foreground);
+    text-wrap: balance;
+  }
+  @media (min-width: 50rem) {
+    .tl-hero h1 { text-wrap: nowrap; }
+  }
+  .tl-hero-tagline {
+    margin: 0;
+    max-width: 42rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--tl-text-auxiliary-foreground);
+  }
+  .tl-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+</style>

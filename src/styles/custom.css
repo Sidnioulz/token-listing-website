@@ -1,3 +1,5 @@
+@import './intents.css';
+
 /* ===== Token Listing — acid lime × electric violet theme ===== */
 
 /* Light mode */
@@ -47,42 +49,40 @@
   --sl-color-hairline-light: #2a1e60;
 }
 
+/* Starlight frame follows the intents in dark mode */
+[data-theme='dark'] {
+  --sl-color-bg: var(--tl-surface-primary-background);
+  --sl-color-bg-nav: var(--tl-surface-secondary-background);
+  --sl-color-bg-sidebar: var(--tl-surface-secondary-background);
+  --sl-color-bg-inline-code: var(--tl-surface-auxiliary-background);
+  --sl-color-text-accent: var(--tl-action-secondary-border);
+  --sl-color-accent-high: var(--tl-text-primary-foreground);
+  --sl-color-hairline: var(--tl-surface-auxiliary-border);
+  --sl-color-hairline-shade: var(--tl-surface-auxiliary-border);
+  --sl-color-hairline-light: var(--tl-surface-auxiliary-border);
+}
+
+/* Prose links: violet, underlined, lime on hover (action-auxiliary) */
+.sl-markdown-content a:not(.tl-button):not(:where(.not-content *)) {
+  color: var(--sl-color-text-accent);
+  text-underline-offset: 0.15em;
+  transition: color var(--tl-motion-fast) var(--tl-ease);
+}
+.sl-markdown-content a:not(.tl-button):not(:where(.not-content *)):hover {
+  color: var(--tl-text-primary-foreground);
+}
+
+/* Card grids following a paragraph need room to breathe */
+.sl-markdown-content :is(p, ul) + .tl-card-grid {
+  margin-top: 2.5rem;
+}
+
 /* Code block backgrounds (Expressive Code) */
 [data-theme='dark'] {
   --ec-frm-edBg: #0a0020;
   --ec-frm-edBrdCol: #2a1e60;
   --ec-ttb-bg: #0a0020;
   --ec-ttb-bdBtmCol: #2a1e60;
-}
-
-/* Splash page hero */
-.hero > .stack {
-  gap: 2rem;
-}
-
-/* No hero image: give the copy the full width so the title stays on one line,
-   and pull the first section up closer to the hero. */
-@media (min-width: 50rem) {
-  .hero {
-    grid-template-columns: 100%;
-    padding-block: clamp(2rem, 5vmin, 4rem) clamp(1rem, 3vmin, 2rem);
-  }
-}
-
-.hero h1 {
-  text-wrap: nowrap;
-  font-size: clamp(var(--sl-text-3xl), calc(0.25rem + 4.5vw), var(--sl-text-6xl));
-}
-
-/* Card grids following a paragraph need room to breathe */
-.sl-markdown-content :is(p, ul) + .card-grid {
-  margin-top: 2.5rem;
-}
-
-.hero .tagline {
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  color: var(--sl-color-gray-2);
-  max-width: 42rem;
 }
 
 /* Page titles use the acid lime accent */
@@ -130,17 +130,4 @@ thead tr {
 /* Bump the heading weight for authority */
 h2, h3 {
   font-weight: 700;
-}
-
-/* Hero action buttons */
-.action.primary {
-  background: var(--sl-color-accent) !important;
-  border-color: var(--sl-color-accent) !important;
-  color: #fff !important;
-}
-
-[data-theme='dark'] .action.primary {
-  background: var(--sl-color-accent) !important;
-  border-color: var(--sl-color-accent) !important;
-  color: #fff !important;
 }

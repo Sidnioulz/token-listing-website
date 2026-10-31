@@ -1,0 +1,356 @@
+---
+/*
+ * PROTOTYPE — throwaway. Brand direction preview on /prototype-brand/, switchable via ?variant=A|B|C.
+ * Delete once the direction is folded into src/styles/custom.css.
+ *
+ *   A — Chosen direction: four chamfers, 1px border, hover = border → lime, filled buttons,
+ *       static grid with a soft lime spotlight that lazily follows the cursor.
+ *   B — Same, but one cut corner on cards (shape comparison only).
+ *   C — Same, but double 3px decorative border (border comparison only).
+ */
+---
+
+<div class="tl-grid" aria-hidden="true"></div>
+<div class="tl-grid tl-grid-spot" aria-hidden="true"></div>
+
+<aside class="proto-panel" aria-label="Prototype parameters">
+  <details open>
+    <summary>Grid &amp; motion parameters</summary>
+    <label>Cell <input type="range" data-var="--tl-grid-cell" min="16" max="96" step="4" value="40" data-unit="px" /><output>40px</output></label>
+    <label>Line alpha <input type="range" data-var="--tl-grid-line-alpha" min="0" max="0.6" step="0.02" value="0.11" /><output>0.11</output></label>
+    <label>Spot radius <input type="range" data-var="--tl-spot-radius" min="10" max="200" step="5" value="110" data-unit="vmax" /><output>110vmax</output></label>
+    <label>Spot softness <input type="range" data-var="--tl-spot-softness" min="0" max="100" step="5" value="0" data-unit="%" /><output>0%</output></label>
+    <label>Spot intensity <input type="range" data-var="--tl-spot-intensity" min="0" max="1" step="0.05" value="0.35" /><output>0.35</output></label>
+    <label>Spot bloom <input type="range" data-var="--tl-spot-bloom" min="0" max="0.3" step="0.01" value="0.05" /><output>0.05</output></label>
+    <label>Follow (lerp) <input type="range" data-var="--tl-spot-follow" min="0.01" max="1" step="0.01" value="0.3" /><output>0.3</output></label>
+    <label>Breathe period <input type="range" data-var="--tl-spot-breathe-period" min="0" max="16" step="0.5" value="8" data-unit="s" /><output>8s</output></label>
+    <label>Breathe amount <input type="range" data-var="--tl-spot-breathe-amount" min="0" max="1" step="0.05" value="0.35" /><output>0.35</output></label>
+    <label>Bevel sm <input type="range" data-var="--tl-bevel-sm" min="0" max="16" step="1" value="6" data-unit="px" /><output>6px</output></label>
+    <label>Bevel lg <input type="range" data-var="--tl-bevel-lg" min="0" max="32" step="1" value="14" data-unit="px" /><output>14px</output></label>
+    <label>Motion fast <input type="range" data-var="--tl-motion-fast" min="0" max="400" step="10" value="120" data-unit="ms" /><output>120ms</output></label>
+    <label>Motion base <input type="range" data-var="--tl-motion-base" min="0" max="800" step="10" value="200" data-unit="ms" /><output>200ms</output></label>
+    <label class="check"><input type="checkbox" id="proto-rm" /> Simulate reduced motion</label>
+    <button type="button" id="proto-copy">Copy current values</button>
+  </details>
+</aside>
+
+<nav class="proto-switcher" aria-label="Prototype variant">
+  <button type="button" data-dir="-1" aria-label="Previous variant">←</button>
+  <span id="proto-label">A</span>
+  <button type="button" data-dir="1" aria-label="Next variant">→</button>
+</nav>
+
+<style is:global>
+  /* ============================================================
+     INTENTS (dark mode root values). Naming: --tl-{purpose}-{priority}-{property}
+     ============================================================ */
+  .proto-page {
+    --tl-action-primary-background: #a3df00;
+    --tl-action-primary-foreground: #05001a;
+    --tl-action-secondary-background: #7b61ff;
+    --tl-action-secondary-foreground: #f0eeff;
+    --tl-action-auxiliary-background: transparent;
+    --tl-action-auxiliary-foreground: #d4cdf5;
+
+    --tl-surface-primary-background: #05001a;
+    --tl-surface-primary-foreground: #f0eeff;
+    --tl-surface-primary-border: #a3df00;
+    --tl-surface-secondary-background: #0d0530;
+    --tl-surface-secondary-foreground: #f0eeff;
+    --tl-surface-secondary-border: #4d3a9e;
+    --tl-surface-auxiliary-background: #160840;
+    --tl-surface-auxiliary-foreground: #d4cdf5;
+    --tl-surface-auxiliary-border: #2a1e60;
+
+    --tl-text-primary-foreground: #a3df00;
+    --tl-text-secondary-foreground: #f0eeff;
+    --tl-text-auxiliary-foreground: #a89adf;
+
+    /* Shape */
+    --tl-bevel-sm: 6px;
+    --tl-bevel-lg: 14px;
+    --tl-rule: 1px;
+
+    /* Motion */
+    --tl-motion-fast: 120ms;
+    --tl-motion-base: 200ms;
+    --tl-ease: cubic-bezier(0.2, 0, 0, 1);
+    --tl-ease-ambient: ease-in-out;
+
+    /* Grid (static) */
+    --tl-grid-cell: 40px;
+    --tl-grid-line-alpha: 0.11;
+    --tl-grid-color-rest: var(--tl-surface-secondary-border);
+    --tl-grid-color-spot: var(--tl-action-primary-background);
+
+    /* Spotlight (ambient, follows cursor) */
+    --tl-spot-radius: 110vmax;      /* size of the lime region */
+    --tl-spot-softness: 0%;        /* where the fade starts: 0% = fade from centre, 60% = hard-ish disc */
+    --tl-spot-intensity: 0.35;      /* max opacity of the lime grid layer */
+    --tl-spot-bloom: 0.05;         /* opacity of the soft lime haze behind the lime grid */
+    --tl-spot-follow: 0.3;         /* lerp factor per frame: lower = lazier */
+    --tl-spot-breathe-period: 8s;  /* 0 disables */
+    --tl-spot-breathe-amount: 0.35; /* fraction of intensity that breathes away */
+    --tl-spot-x: 50vw;             /* written by JS */
+    --tl-spot-y: 30vh;
+  }
+
+  /* Map Starlight onto intents so the frame follows */
+  .proto-page[data-theme='dark'] {
+    --sl-color-bg: var(--tl-surface-primary-background);
+    --sl-color-bg-nav: var(--tl-surface-secondary-background);
+    --sl-color-bg-sidebar: var(--tl-surface-secondary-background);
+    --sl-color-text-accent: var(--tl-action-secondary-background);
+    --sl-color-hairline: var(--tl-surface-auxiliary-border);
+  }
+
+  /* ============================================================
+     GRID BACKGROUND — two fixed layers.
+     .tl-grid       static violet grid, never repaints.
+     .tl-grid-spot  identical grid in lime, masked by a radial gradient whose
+                    position JS lerps toward the cursor. Only mask-position changes.
+     ============================================================ */
+  .proto-page .tl-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    --_c: var(--tl-grid-color-rest);
+    --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 100%), transparent);
+    background-image:
+      linear-gradient(to right, var(--_line) var(--tl-rule), transparent var(--tl-rule)),
+      linear-gradient(to bottom, var(--_line) var(--tl-rule), transparent var(--tl-rule));
+    background-size: var(--tl-grid-cell) var(--tl-grid-cell);
+  }
+  .proto-page .tl-grid-spot {
+    --_c: var(--tl-grid-color-spot);
+    --_line: color-mix(in srgb, var(--_c) calc(var(--tl-grid-line-alpha) * 180%), transparent);
+    opacity: var(--tl-spot-intensity);
+    mask-image: radial-gradient(
+      circle var(--tl-spot-radius) at var(--tl-spot-x) var(--tl-spot-y),
+      black var(--tl-spot-softness),
+      transparent 100%
+    );
+    will-change: mask-position, opacity;
+    animation: tl-spot-breathe var(--tl-spot-breathe-period) var(--tl-ease-ambient) infinite alternate;
+  }
+  .proto-page .tl-grid-spot::after {
+    /* soft haze so the lime reads as light, not just lines */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle var(--tl-spot-radius) at var(--tl-spot-x) var(--tl-spot-y),
+      color-mix(in srgb, var(--tl-grid-color-spot) calc(var(--tl-spot-bloom) * 100%), transparent),
+      transparent 100%
+    );
+  }
+  @keyframes tl-spot-breathe {
+    from { opacity: var(--tl-spot-intensity); }
+    to { opacity: calc(var(--tl-spot-intensity) * (1 - var(--tl-spot-breathe-amount))); }
+  }
+
+  /* Reduced motion: spotlight parks at its idle position, no breathing, instant transitions */
+  @media (prefers-reduced-motion: reduce) {
+    .proto-page .tl-grid-spot { animation: none; }
+    .proto-page { --tl-motion-fast: 0ms; --tl-motion-base: 0ms; }
+  }
+  .proto-page[data-reduced-motion] .tl-grid-spot { animation: none; }
+  .proto-page[data-reduced-motion] { --tl-motion-fast: 0ms; --tl-motion-base: 0ms; }
+
+  /* ============================================================
+     SHARED: mono label voice, title colours
+     ============================================================ */
+  .proto-page .hero h1 { color: var(--tl-text-primary-foreground); }
+  .proto-page .hero .tagline { color: var(--tl-text-auxiliary-foreground); }
+  .proto-page .sl-markdown-content h2 { color: var(--tl-text-secondary-foreground); }
+  .proto-page .card .title { font-family: var(--__sl-font-mono); font-size: var(--sl-text-base); letter-spacing: 0.02em; text-transform: uppercase; }
+  .proto-page .card .body { color: var(--tl-text-auxiliary-foreground); }
+  .proto-page :not(pre) > code { background: var(--tl-surface-auxiliary-background); color: var(--tl-text-primary-foreground); border-radius: 0; }
+
+  /* ============================================================
+     BUTTONS — filled, no border; fill = action
+     ============================================================ */
+  .proto-page .sl-link-button {
+    border-radius: var(--tl-bevel-sm);
+    corner-shape: bevel;
+    border: 0;
+    font-family: var(--__sl-font-mono);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition:
+      background-color var(--tl-motion-fast) var(--tl-ease),
+      color var(--tl-motion-fast) var(--tl-ease),
+      outline-color var(--tl-motion-fast) var(--tl-ease),
+      translate var(--tl-motion-base) var(--tl-ease);
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+  }
+  .proto-page .sl-link-button.primary {
+    background: var(--tl-action-primary-background);
+    color: var(--tl-action-primary-foreground);
+  }
+  .proto-page .sl-link-button.primary:hover {
+    background: color-mix(in oklab, var(--tl-action-primary-background), white 12%);
+    color: var(--tl-action-primary-foreground);
+    translate: 0 -1px;
+  }
+  .proto-page .sl-link-button.minimal {
+    color: var(--tl-action-auxiliary-foreground);
+    padding-inline: 0.75rem;
+  }
+  .proto-page .sl-link-button.minimal:hover {
+    background: var(--tl-surface-auxiliary-background);
+    color: var(--tl-text-primary-foreground);
+  }
+  .proto-page .sl-link-button:focus-visible {
+    outline-color: var(--tl-action-primary-background);
+  }
+
+  /* ============================================================
+     CARDS — surfaces, defined by a 1px border; hover = border → primary
+     ============================================================ */
+  .proto-page .card {
+    background: var(--tl-surface-secondary-background);
+    border: var(--tl-rule) solid var(--tl-surface-secondary-border);
+    border-radius: 0 var(--tl-bevel-lg) 0 0;
+    corner-shape: bevel;
+    transition:
+      border-color var(--tl-motion-fast) var(--tl-ease),
+      background-color var(--tl-motion-fast) var(--tl-ease);
+  }
+  .proto-page .card:hover {
+    border-color: var(--tl-surface-primary-border);
+  }
+  .proto-page .card .icon {
+    border-radius: 0;
+    border: var(--tl-rule) solid var(--tl-surface-secondary-border);
+    background: var(--tl-surface-auxiliary-background);
+    color: var(--tl-text-primary-foreground);
+    padding: 0.3em;
+    width: 2.2em;
+    height: 2.2em;
+    transition: border-color var(--tl-motion-fast) var(--tl-ease);
+  }
+  .proto-page .card:hover .icon { border-color: var(--tl-surface-primary-border); }
+
+  /* ---------- Variant B: four cut corners (shape comparison) ---------- */
+  .proto-page[data-variant='B'] .card { border-radius: var(--tl-bevel-lg); }
+
+  /* ---------- Variant C: double decorative border (border comparison) ---------- */
+  .proto-page[data-variant='C'] .card { border-width: 3px; border-style: double; }
+
+  /* ============================================================
+     PROTOTYPE CHROME (not part of the design under evaluation)
+     ============================================================ */
+  .proto-switcher {
+    position: fixed; bottom: 1rem; left: 50%; translate: -50% 0; z-index: 100;
+    display: flex; gap: 0.75rem; align-items: center;
+    background: #fff; color: #111; padding: 0.4rem 0.6rem; border-radius: 999px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.5); font: 600 0.85rem/1 system-ui, sans-serif;
+  }
+  .proto-switcher button { all: unset; cursor: pointer; padding: 0.2rem 0.5rem; border-radius: 999px; }
+  .proto-switcher button:hover { background: #eee; }
+  .proto-panel {
+    position: fixed; top: 4.5rem; right: 1rem; z-index: 100; width: 16rem;
+    background: #fff; color: #111; padding: 0.6rem 0.8rem; border-radius: 8px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.5); font: 0.75rem/1.4 system-ui, sans-serif;
+  }
+  .proto-panel summary { color: #111; cursor: pointer; font-weight: 700; margin-bottom: 0.4rem; }
+  .proto-panel label { display: grid; grid-template-columns: 5.5rem 1fr 3.2rem; gap: 0.4rem; align-items: center; margin: 0.15rem 0; }
+  .proto-panel label.check { grid-template-columns: auto 1fr; margin-top: 0.5rem; }
+  .proto-panel output { text-align: right; font-variant-numeric: tabular-nums; }
+  .proto-panel button { margin-top: 0.5rem; width: 100%; font: inherit; padding: 0.3rem; cursor: pointer; }
+  @media (max-width: 60rem) { .proto-panel { display: none; } }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const VARIANTS = ['A', 'B', 'C'] as const;
+  const NAMES: Record<string, string> = {
+    A: 'A — Chosen: one cut corner, 1px border, cursor spotlight',
+    B: 'B — Shape check: four cut corners',
+    C: 'C — Border check: 3px double',
+  };
+
+  root.classList.add('proto-page');
+  root.setAttribute('data-theme', 'dark');
+
+  // ---- variant switching
+  const params = new URLSearchParams(location.search);
+  let current = (params.get('variant') ?? 'A').toUpperCase();
+  if (!VARIANTS.includes(current as any)) current = 'A';
+  const label = document.getElementById('proto-label')!;
+  function apply() {
+    root.setAttribute('data-variant', current);
+    label.textContent = NAMES[current];
+    const url = new URL(location.href);
+    url.searchParams.set('variant', current);
+    history.replaceState(null, '', url);
+  }
+  function cycle(dir: number) {
+    const i = VARIANTS.indexOf(current as any);
+    current = VARIANTS[(i + dir + VARIANTS.length) % VARIANTS.length];
+    apply();
+  }
+  document.querySelectorAll<HTMLButtonElement>('.proto-switcher button').forEach((b) =>
+    b.addEventListener('click', () => cycle(Number(b.dataset.dir)))
+  );
+  window.addEventListener('keydown', (e) => {
+    const t = e.target as HTMLElement;
+    if (t && t.matches('input, textarea, [contenteditable]')) return;
+    if (e.key === 'ArrowLeft') cycle(-1);
+    if (e.key === 'ArrowRight') cycle(1);
+  });
+  apply();
+
+  // ---- spotlight: lerp toward the pointer; the loop sleeps once converged.
+  // Only two custom properties change per frame, on one fixed layer.
+  const spot = document.querySelector<HTMLElement>('.tl-grid-spot')!;
+  const reduced = () =>
+    root.hasAttribute('data-reduced-motion') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let tx = innerWidth / 2, ty = innerHeight * 0.3; // idle target
+  let cx = tx, cy = ty;
+  let raf = 0;
+  function follow() {
+    return parseFloat(getComputedStyle(root).getPropertyValue('--tl-spot-follow')) || 0.3;
+  }
+  function frame() {
+    const k = reduced() ? 1 : follow();
+    cx += (tx - cx) * k;
+    cy += (ty - cy) * k;
+    spot.style.setProperty('--tl-spot-x', `${cx.toFixed(1)}px`);
+    spot.style.setProperty('--tl-spot-y', `${cy.toFixed(1)}px`);
+    if (Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3) raf = requestAnimationFrame(frame);
+    else raf = 0;
+  }
+  function wake() { if (!raf) raf = requestAnimationFrame(frame); }
+  window.addEventListener('pointermove', (e) => { tx = e.clientX; ty = e.clientY; wake(); }, { passive: true });
+  window.addEventListener('pointerleave', () => { tx = innerWidth / 2; ty = innerHeight * 0.3; wake(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && raf) { cancelAnimationFrame(raf); raf = 0; } else wake(); });
+  wake();
+
+  // ---- parameter panel
+  const sliders = document.querySelectorAll<HTMLInputElement>('.proto-panel input[type=range]');
+  sliders.forEach((s) => {
+    const out = s.nextElementSibling as HTMLOutputElement;
+    s.addEventListener('input', () => {
+      const v = s.value + (s.dataset.unit ?? '');
+      root.style.setProperty(s.dataset.var!, v);
+      out.value = v;
+    });
+  });
+
+  document.getElementById('proto-rm')!.addEventListener('change', (e) => {
+    (e.target as HTMLInputElement).checked
+      ? root.setAttribute('data-reduced-motion', '')
+      : root.removeAttribute('data-reduced-motion');
+    wake();
+  });
+
+  document.getElementById('proto-copy')!.addEventListener('click', () => {
+    const lines = Array.from(sliders).map((s) => `  ${s.dataset.var}: ${s.value}${s.dataset.unit ?? ''};`);
+    lines.push(`  /* variant: ${current} */`);
+    navigator.clipboard?.writeText(lines.join('\n'));
+  });
+</script>

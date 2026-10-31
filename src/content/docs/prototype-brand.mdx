@@ -1,0 +1,59 @@
+---
+title: Token Listing Format
+description: PROTOTYPE — throwaway brand direction preview. Not linked from the sidebar. Delete before release.
+template: splash
+hero:
+  tagline: The design token interchange format for developers.
+  actions:
+    - text: Get started
+      link: /tutorials/first-listing/
+      icon: right-arrow
+      variant: primary
+    - text: Read the spec
+      link: /spec/
+      icon: document
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import PrototypeBrand from '../../components/PrototypeBrand.astro';
+
+<PrototypeBrand />
+
+## What is Token Listing?
+
+In code environments, design tokens are rarely represented in the DTCG format. Every styling system, framework or platform has its own conventions for naming and structuring tokens. The Token Listing format fills that gap: it maps DTCG tokens to their exact representations in code, with a predictable, machine-readable structure. Inline code like `$extensions` and `tokenListing` should sit comfortably in prose.
+
+<CardGrid>
+  <Card title="Interoperable" icon="puzzle">
+    Any compliant translator's output is consumable by any compliant consumer. Switch tools without rewriting your token data pipelines.
+  </Card>
+  <Card title="Feature Rich" icon="setting">
+    Read per-platform names and values, navigate alias chains and mode resolution, preview tokens without custom parsers.
+  </Card>
+  <Card title="Complements DTCG" icon="document">
+    DTCG describes source design tokens as they are authored. Token Listing extends them via DTCG extensions.
+  </Card>
+  <Card title="Linting tools" icon="warning">
+    Enforce token pairing policies based on their subtypes, prevent deprecated token usage, etc.
+  </Card>
+</CardGrid>
+
+## Where to start
+
+<CardGrid>
+  <Card title="Tutorials" icon="rocket">
+    Learn by doing. [Build your first Token Listing](/tutorials/first-listing/) with Terrazzo, then [read one in your own tool](/tutorials/read-a-listing/).
+  </Card>
+  <Card title="Reference" icon="list-format">
+    The normative [specification](/spec/), annotated [examples](/examples/), the [glossary](/glossary/) and the [JSON Schema](/schema.json).
+  </Card>
+</CardGrid>
+
+```json title="tokens.listing.json"
+{
+  "name": "color.action.primary.background",
+  "value": "#a3df00",
+  "platforms": { "css": "--tl-action-primary-background" }
+}
+```
